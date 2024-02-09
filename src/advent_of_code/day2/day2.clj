@@ -1,4 +1,5 @@
-(ns advent-of-code.day2.day2)
+(ns advent-of-code.day2.day2
+  (:require [clojure.string :as str]))
 
 (defn parse-number-before-blue [s]
   (if-let [[_ num] (re-find #"(\d+)\s+blue" s)]
@@ -42,13 +43,21 @@
     true
     (>= 12 num-red)))
 
+(defn valid-round?
+  "docstring"
+  [round]
+  (and (valid-blue? (parse-number-before-blue round)) (valid-green? (parse-number-before-green round)) (valid-red? (parse-number-before-red round)))
+  )
+
 (defn calc-score
   "docstring"
   [game]
-  (if (and (valid-blue? (parse-number-before-blue game)) (valid-green? (parse-number-before-green game)) (valid-red? (parse-number-before-red game)))
+  (if (every? valid-round? (str/split game #";"))
     (parse-number-after-game game)
     0)
   )
+
+(every? valid-round? (str/split "Game 1: 1 blue 2 red; 100 red" #";"))
 
 (parse-number-before-blue "Game 1: 1 blue")
 
