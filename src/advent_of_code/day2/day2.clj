@@ -66,3 +66,9 @@
   "docstring"
   [games-list]
   (apply + (map calc-score games-list)))
+
+
+(-> "./src/advent_of_code/day2/game-values.txt"
+    slurp
+    (str/split #"\n")
+    calculate-sum-of-ids)
