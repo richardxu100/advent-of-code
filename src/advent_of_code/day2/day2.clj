@@ -32,10 +32,17 @@
     true
     (>= 13 num-green)))
 
+(defn valid-red?
+  "docstring"
+  [num-red]
+  (if (nil? num-red)
+    true
+    (>= 12 num-red)))
+
 (defn calc-score
   "docstring"
   [game]
-  (if (and (valid-blue? (parse-number-before-blue game)) (valid-green? (parse-number-before-green game)))
+  (if (and (valid-blue? (parse-number-before-blue game)) (valid-green? (parse-number-before-green game)) (valid-red? (parse-number-before-red game)))
     (parse-number-after-game game)
     0)
   )
