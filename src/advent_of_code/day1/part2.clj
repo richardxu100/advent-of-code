@@ -18,6 +18,18 @@
     nil))
 ; can keep the same parse-number, just formulate the number from right to left
 
+(defn find-first-number
+  "docstring"
+  [string]
+  (loop [current string]
+    (cond
+      (empty? current)
+      nil
+      (not (nil? (parse-number current)))
+      (parse-number current)
+      :else
+      (recur (apply str (rest current))))))
+
 (defn left-most-number
   "docstring"
   [string]
@@ -39,8 +51,8 @@
     (cond
       (Character/isDigit (first remaining-string))
       (- (int (first remaining-string)) (int \0))
-      (not (nil? (parse-number (str current-string (first remaining-string)))))
-      (parse-number (str current-string (first remaining-string)))
+      (not (nil? (find-first-number (str current-string (first remaining-string)))))
+      (find-first-number (str current-string (first remaining-string)))
       :else
       (recur (rest remaining-string) (str current-string (first remaining-string))))))
 

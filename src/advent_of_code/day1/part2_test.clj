@@ -22,3 +22,6 @@
 
 (deftest it-calculates-for-string-number-on-right
   (is (= 15 (part2/calibration-total ["14five"]))))
+
+(deftest it-handles-when-first-letter-is-not-string-number
+  (is (= 24 (part2/calibration-total ["xtwone3four"]))))
