@@ -30,6 +30,18 @@
       :else
       (recur (apply str (rest current))))))
 
+(defn find-first-number-tail
+  "docstring"
+  [string]
+  (loop [current string]
+    (cond
+      (empty? current)
+      nil
+      (not (nil? (parse-number current)))
+      (parse-number current)
+      :else
+      (recur (apply str (butlast current))))))
+
 (defn left-most-number
   "docstring"
   [string]
@@ -64,11 +76,12 @@
     (cond
       (Character/isDigit (last remaining-string))
       (- (int (last remaining-string)) (int \0))
-      (not (nil? (parse-number (str (last remaining-string) current-string))))
-      (parse-number (str (last remaining-string) current-string))
+      (not (nil? (find-first-number-tail (str (last remaining-string) current-string))))
+      (find-first-number-tail (str (last remaining-string) current-string))
       :else
       (recur (butlast remaining-string) (str (last remaining-string) current-string )))))
 
+(find-first-number-tail "twox")
 
 (defn calc-calibration-value
   "docstring"
