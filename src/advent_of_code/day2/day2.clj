@@ -65,4 +65,4 @@
 (defn calculate-sum-of-ids
   "docstring"
   [games-list]
-  (calc-score (first games-list)))
+  (apply + (map calc-score games-list)))
