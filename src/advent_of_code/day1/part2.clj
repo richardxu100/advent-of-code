@@ -1,4 +1,5 @@
-(ns advent-of-code.day1.part2)
+(ns advent-of-code.day1.part2
+  (:require [clojure.string :as str]))
 
 (defn convert-string-to-number
   "docstring"
@@ -18,9 +19,18 @@
   [string]
   (left-most-number (reverse string)))
 
+(defn calc-calibration-value
+  "docstring"
+  [line]
+  (+ (* 10 (left-most-number line) ) (right-most-number line)))
+
 (defn calibration-total
   "docstring"
   [calibrations]
-  (let [value (first calibrations)]
-    (+ (* 10 (left-most-number value) ) (right-most-number value))))
+  (apply + (map calc-calibration-value calibrations)) )
 
+
+(-> "./src/advent_of_code/calibration-values.txt"
+    slurp
+    (str/split #"\n")
+    calibration-total)

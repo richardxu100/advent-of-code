@@ -14,3 +14,5 @@
 (deftest it-calculates-for-number-based-string-without-number-at-the-fronted-and-end
   (is (= 35 (part2/calibration-total ["apple3apple5apple"]))))
 
+(deftest it-calculates-for-multiple-calibrations
+  (is (= 30 (part2/calibration-total ["10", "20"]))))
