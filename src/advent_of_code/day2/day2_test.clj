@@ -19,3 +19,6 @@
 
 (deftest it-returns-zero-when-second-round-is-not-valid
   (is (= 0 (day2/calculate-sum-of-ids ["Game 1: 1 blue 2 red; 100 red"]))))
+
+(deftest it-returns-correct-when-multiple-games
+  (is (= 3 (day2/calculate-sum-of-ids ["Game 1: 1 blue 2 red" "Game 2: 1 blue 2 red"]))))
