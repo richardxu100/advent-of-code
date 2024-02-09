@@ -17,5 +17,5 @@
 (deftest it-handles-without-blue-value
   (is (= 1 (day2/calculate-sum-of-ids ["Game 1: 1 green 1 red"]))))
 
-;(deftest it-returns-for-valid-game-2
-;  (is (= 2 (day2/calculate-sum-of-ids ["Game 1: 100 blue" "Game 2: 1 blue"]))))
+(deftest it-returns-zero-when-second-round-is-not-valid
+  (is (= 0 (day2/calculate-sum-of-ids ["Game 1: 1 blue 2 red; 100 red"]))))
