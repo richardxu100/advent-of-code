@@ -5,3 +5,6 @@
 (deftest it-calculates-for-number-based-string
   (is (= 15 (part2/calibration-total ["15"]))))
 
+(deftest it-calculates-for-number-based-string-without-number-at-the-front
+  (is (= 15 (part2/calibration-total ["apple15"]))))
+
