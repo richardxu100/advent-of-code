@@ -1,11 +1,6 @@
 (ns advent-of-code.day1.part2
   (:require [clojure.string :as str]))
 
-(defn convert-string-to-number
-  "docstring"
-  [string]
-  (- (int string) (int \0)))
-
 (defn left-most-number
   "docstring"
   [string]
