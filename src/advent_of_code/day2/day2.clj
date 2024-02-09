@@ -26,8 +26,7 @@
   [num-blue]
   (if (nil? num-blue)
     true
-    (>= 14 num-blue))
-  )
+    (>= 14 num-blue)))
 
 (defn valid-green?
   "docstring"
@@ -46,27 +45,25 @@
 (defn valid-round?
   "docstring"
   [round]
-  (and (valid-blue? (parse-number-before-blue round)) (valid-green? (parse-number-before-green round)) (valid-red? (parse-number-before-red round)))
-  )
+  (and (valid-blue? (parse-number-before-blue round))
+       (valid-green? (parse-number-before-green round))
+       (valid-red? (parse-number-before-red round))))
 
 (defn calc-score
   "docstring"
   [game]
   (if (every? valid-round? (str/split game #";"))
     (parse-number-after-game game)
-    0)
-  )
+    0))
 
 (every? valid-round? (str/split "Game 1: 1 blue 2 red; 100 red" #";"))
 
 (parse-number-before-blue "Game 1: 1 blue")
 
-
 (defn calculate-sum-of-ids
   "docstring"
   [games-list]
   (apply + (map calc-score games-list)))
-
 
 (-> "./src/advent_of_code/day2/game-values.txt"
     slurp
