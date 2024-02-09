@@ -15,7 +15,19 @@
     (Integer/parseInt num)
     nil))
 
+(defn calc-score
+  "docstring"
+  [game]
+  )
+
+
+
+(defn valid-blue?
+  "docstring"
+  [num-blue]
+  (>= num-blue 14))
+
 (defn calculate-sum-of-ids
   "docstring"
   [games-list]
-  1)
+  (reduce + (map calc-score games-list)))
