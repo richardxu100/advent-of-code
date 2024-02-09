@@ -15,19 +15,28 @@
     (Integer/parseInt num)
     nil))
 
-(defn calc-score
-  "docstring"
-  [game]
-  )
-
-
+(defn parse-number-after-game [s]
+  (if-let [[_ num] (re-find #"Game\s+(\d+)" s)]
+    (Integer/parseInt num)
+    nil))
 
 (defn valid-blue?
   "docstring"
   [num-blue]
-  (>= num-blue 14))
+  (>= 14 num-blue))
+
+(defn calc-score
+  "docstring"
+  [game]
+  (if (valid-blue? (parse-number-before-blue game))
+    (parse-number-after-game game)
+    0)
+  )
+
+(parse-number-before-blue "Game 1: 1 blue")
+
 
 (defn calculate-sum-of-ids
   "docstring"
   [games-list]
-  (reduce + (map calc-score games-list)))
+  (calc-score (first games-list)))
