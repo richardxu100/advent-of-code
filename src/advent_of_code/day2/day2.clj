@@ -18,4 +18,4 @@
 (defn calculate-sum-of-ids
   "docstring"
   [games-list]
-  nil)
+  1)
