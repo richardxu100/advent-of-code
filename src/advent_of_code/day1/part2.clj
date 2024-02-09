@@ -65,19 +65,19 @@
       (not (nil? (find-first-number-tail (str (last remaining-string) current-string))))
       (find-first-number-tail (str (last remaining-string) current-string))
       :else
-      (recur (butlast remaining-string) (str (last remaining-string) current-string )))))
+      (recur (butlast remaining-string) (str (last remaining-string) current-string)))))
 
 (find-first-number-tail "twox")
 
 (defn calc-calibration-value
   "docstring"
   [line]
-  (+ (* 10 (left-most-number-with-string-parsing line) ) (right-most-number-with-string-parsing line)))
+  (+ (* 10 (left-most-number-with-string-parsing line)) (right-most-number-with-string-parsing line)))
 
 (defn calibration-total
   "docstring"
   [calibrations]
-  (apply + (map calc-calibration-value calibrations)) )
+  (apply + (map calc-calibration-value calibrations)))
 
 (-> "./src/advent_of_code/calibration-values.txt"
     slurp
