@@ -44,11 +44,24 @@
       :else
       (recur (rest remaining-string) (str current-string (first remaining-string))))))
 
+(defn right-most-number-with-string-parsing
+  "docstring"
+  [string]
+  (loop [remaining-string string
+         current-string ""]
+    (cond
+      (Character/isDigit (last remaining-string))
+      (- (int (last remaining-string)) (int \0))
+      (not (nil? (parse-number (str (last remaining-string) current-string))))
+      (parse-number (str (last remaining-string) current-string))
+      :else
+      (recur (butlast remaining-string) (str (last remaining-string) current-string )))))
+
 
 (defn calc-calibration-value
   "docstring"
   [line]
-  (+ (* 10 (left-most-number-with-string-parsing line) ) (right-most-number line)))
+  (+ (* 10 (left-most-number-with-string-parsing line) ) (right-most-number-with-string-parsing line)))
 
 (defn calibration-total
   "docstring"
