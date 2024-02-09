@@ -25,3 +25,6 @@
 
 (deftest it-handles-when-first-letter-is-not-string-number
   (is (= 24 (part2/calibration-total ["xtwone3four"]))))
+
+(deftest it-handles-when-last-letter-is-not-string-number
+  (is (= 32 (part2/calibration-total ["ne3fourtwox"]))))
