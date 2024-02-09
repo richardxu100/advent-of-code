@@ -5,9 +5,17 @@
   [string]
   (- (int string) (int \0)))
 
+(defn left-most-number
+  "docstring"
+  [string]
+  (loop [current string]
+    (if (Character/isDigit (first current))
+      (- (int (first current)) (int \0))
+      (recur (rest current)))))
+
 (defn calibration-total
   "docstring"
   [calibrations]
   (let [value (first calibrations)]
-    (+ (* 10 (convert-string-to-number (first value)) ) (convert-string-to-number (last value)))))
+    (+ (* 10 (left-most-number value) ) (convert-string-to-number (last value)))))
 
