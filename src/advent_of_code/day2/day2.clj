@@ -23,7 +23,10 @@
 (defn valid-blue?
   "docstring"
   [num-blue]
-  (>= 14 num-blue))
+  (if (nil? num-blue)
+    true
+    (>= 14 num-blue))
+  )
 
 (defn valid-green?
   "docstring"
