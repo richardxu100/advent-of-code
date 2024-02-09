@@ -16,7 +16,6 @@
     "eight" 8
     "nine" 9
     nil))
-; can keep the same parse-number, just formulate the number from right to left
 
 (defn find-first-number
   "docstring"
@@ -41,19 +40,6 @@
       (parse-number current)
       :else
       (recur (apply str (butlast current))))))
-
-(defn left-most-number
-  "docstring"
-  [string]
-  (loop [current string]
-    (if (Character/isDigit (first current))
-      (- (int (first current)) (int \0))
-      (recur (rest current)))))
-
-(defn right-most-number
-  "docstring"
-  [string]
-  (left-most-number (reverse string)))
 
 (defn left-most-number-with-string-parsing
   "docstring"
