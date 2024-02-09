@@ -13,9 +13,14 @@
       (- (int (first current)) (int \0))
       (recur (rest current)))))
 
+(defn right-most-number
+  "docstring"
+  [string]
+  (left-most-number (reverse string)))
+
 (defn calibration-total
   "docstring"
   [calibrations]
   (let [value (first calibrations)]
-    (+ (* 10 (left-most-number value) ) (convert-string-to-number (last value)))))
+    (+ (* 10 (left-most-number value) ) (right-most-number value))))
 
