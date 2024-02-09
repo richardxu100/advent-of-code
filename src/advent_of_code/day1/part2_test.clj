@@ -17,5 +17,8 @@
 (deftest it-calculates-for-multiple-calibrations
   (is (= 30 (part2/calibration-total ["10", "20"]))))
 
-(deftest it-calculates-for-string-number
+(deftest it-calculates-for-string-number-on-left
   (is (= 15 (part2/calibration-total ["one25"]))))
+
+(deftest it-calculates-for-string-number-on-right
+  (is (= 15 (part2/calibration-total ["14five"]))))
