@@ -23,8 +23,7 @@
   (let [rounds (str/split game #";")
         max-blue (apply max (map parse-number-before-blue rounds))
         max-green (apply max (map parse-number-before-green rounds))
-        max-red (apply max (map parse-number-before-red rounds))
-        ]
+        max-red (apply max (map parse-number-before-red rounds))]
     (* max-blue max-green max-red)))
 
 (defn calc-sum-of-products
