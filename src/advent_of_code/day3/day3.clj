@@ -44,7 +44,10 @@
   [current-num current-num-index y graph]
   (let [all-neighbors (set (apply concat (map (fn [x] (find-neighbor-indices x y))
                                               (range current-num-index (+ current-num-index (count current-num)))) ))]
-    (some is-symbol? (map (fn [coord] (get-graph-value graph coord)) (filter (fn [coord] (is-in-graph? graph coord)) all-neighbors))) ))
+    (->> all-neighbors
+         (filter (fn [coord] (is-in-graph? graph coord)))
+         (map #(get-graph-value graph %))
+         (some is-symbol?)) ))
 
 (defn find-valid-nums
   "docstring"
