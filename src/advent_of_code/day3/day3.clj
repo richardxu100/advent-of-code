@@ -39,8 +39,10 @@
         (empty? remaining)
         (if (empty? current-num)
           0
-          (let [left-neighbor [(dec current-num-index) 0]]  ; add more tests, change to all-neighbors or something. tdd can be weird
-            (if (and (is-in-graph? left-neighbor graph) (is-symbol? (get-graph-value graph left-neighbor)))
+          (let [left-neighbor [(dec current-num-index) 0]
+                right-neighbor [(+ current-num-index (count current-num)) 0]]  ; add more tests, change to all-neighbors or something. tdd can be weird
+            (if (or (and (is-in-graph? left-neighbor graph) (is-symbol? (get-graph-value graph left-neighbor)))
+                    (and (is-in-graph? right-neighbor graph) (is-symbol? (get-graph-value graph right-neighbor))))
               (Integer/parseInt current-num)
               0)))
         (is-digit? (first remaining))
