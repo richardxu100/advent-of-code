@@ -42,16 +42,9 @@
 (defn is-valid-num
   "docstring"
   [current-num current-num-index y graph]
-  (let [left-neighbor [(dec current-num-index) y]
-        right-neighbor [(+ current-num-index (count current-num)) y]
-        down-neighbor [current-num-index (inc y)]
-        up-neighbor [current-num-index (dec y)]
-        ]  ; add more tests, change to all-neighbors or something. tdd can be weird
-    (or (and (is-in-graph? left-neighbor graph) (is-symbol? (get-graph-value graph left-neighbor)))
-        (and (is-in-graph? right-neighbor graph) (is-symbol? (get-graph-value graph right-neighbor)))
-        (and (is-in-graph? down-neighbor graph) (is-symbol? (get-graph-value graph down-neighbor)))
-        (and (is-in-graph? up-neighbor graph) (is-symbol? (get-graph-value graph up-neighbor)))
-        )))
+  (let [all-neighbors (set (apply concat (map (fn [x] (find-neighbor-indices x y))
+                                              (range current-num-index (+ current-num-index (count current-num)))) ))]
+    (some is-symbol? (map (fn [coord] (get-graph-value graph coord)) (filter (fn [coord] (is-in-graph? coord graph)) all-neighbors))) ))
 
 (defn find-valid-nums
   "docstring"
