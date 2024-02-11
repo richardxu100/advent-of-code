@@ -39,17 +39,16 @@
    [(+ x 1) y]
    [(+ x 1) (+ y 1)]])
 
-
 (defn is-valid-num
   "docstring"
   [current-num current-num-index y graph]
-    (->> (range current-num-index (+ current-num-index (count current-num)))
-         (map #(find-neighbor-indices % y))
-         (apply concat)
-         (set)
-         (filter #(is-in-graph? graph %))
-         (map #(get-graph-value graph %))
-         (some is-symbol?)) )
+  (->> (range current-num-index (+ current-num-index (count current-num)))
+       (map #(find-neighbor-indices % y))
+       (apply concat)
+       (set)
+       (filter #(is-in-graph? graph %))
+       (map #(get-graph-value graph %))
+       (some is-symbol?)))
 
 (defn find-valid-nums
   "docstring"
@@ -83,4 +82,10 @@
   [graph]
   (apply + (map-indexed (fn [y row] (find-valid-nums graph row y)) graph)))
 
-(sum-of-parts (map (fn [row] (str/split row #"")) (str/split (slurp "./src/advent_of_code/day3/graph-input.txt") #"\n")))
+(let [graph (->
+             "./src/advent_of_code/day3/graph-input.txt"
+             (slurp)
+             (str/split #"\n"))]
+  (->> graph
+       (map (fn [row] (str/split row #"")))
+       sum-of-parts))
