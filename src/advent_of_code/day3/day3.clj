@@ -29,10 +29,13 @@
 (defn is-valid-num
   "docstring"
   [current-num current-num-index y graph]
-  (let [left-neighbor [(dec current-num-index) 0]
-        right-neighbor [(+ current-num-index (count current-num)) 0]]  ; add more tests, change to all-neighbors or something. tdd can be weird
+  (let [left-neighbor [(dec current-num-index) y]
+        right-neighbor [(+ current-num-index (count current-num)) y]
+        down-neighbor [current-num-index (inc y)]]  ; add more tests, change to all-neighbors or something. tdd can be weird
     (or (and (is-in-graph? left-neighbor graph) (is-symbol? (get-graph-value graph left-neighbor)))
-        (and (is-in-graph? right-neighbor graph) (is-symbol? (get-graph-value graph right-neighbor))))))
+        (and (is-in-graph? right-neighbor graph) (is-symbol? (get-graph-value graph right-neighbor)))
+        (and (is-in-graph? down-neighbor graph) (is-symbol? (get-graph-value graph down-neighbor)))
+        )))
 
 (defn sum-of-parts
   "docstring"
