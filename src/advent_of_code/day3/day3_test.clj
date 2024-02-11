@@ -10,3 +10,6 @@
 
 (deftest it-returns-for-bigger-number
   (is (= 34 (day3/sum-of-parts [["*" "3" "4"]]))))
+
+(deftest it-returns-0-if-no-neighbor-is-symbol
+  (is (= 0 (day3/sum-of-parts [["." "3"]]))))
