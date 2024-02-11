@@ -50,6 +50,9 @@
 (deftest it-handles-bottom-left-neighbor
   (is (= (day3/sum-of-parts [["." "3"] ["*" "."]]) 3)))
 
+(deftest it-handles-top-right-neighbor-of-second-number
+  (is (= (day3/sum-of-parts [["3" "4" "."] ["." "." "*"]]) 34)))
+
 (deftest it-handles-multiple-rows
   (is (= (day3/sum-of-parts [["3"] ["*"]
                              ["4"] ["*"]]) 7)))
