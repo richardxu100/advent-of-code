@@ -14,11 +14,14 @@
   "docstring"
   [graph]
   (let [row (first graph)]
-    (loop [remaining row]
+    (loop [remaining row
+           current-num ""]
       (cond
         (empty? remaining)
-        0
+        (if (empty? current-num)
+          0
+          (Integer/parseInt current-num))
         (is-digit? (first remaining))
-        (Integer/parseInt (first remaining))
+        (recur (rest remaining) (str current-num (first remaining)))
         :else
-        (recur (rest remaining))))))
+        (recur (rest remaining) current-num)))))
