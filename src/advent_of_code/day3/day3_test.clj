@@ -7,3 +7,6 @@
 
 (deftest it-returns-for-other-single-valid-number
   (is (= 3 (day3/sum-of-parts [["*" "3"]]))))
+
+(deftest it-returns-for-bigger-number
+  (is (= 34 (day3/sum-of-parts [["*" "3" "4"]]))))

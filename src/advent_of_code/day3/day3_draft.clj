@@ -23,13 +23,13 @@
 
 
 (defn is-digit?
-  "docstring"
+  "Check if the given character represents a digit."
   [char]
   (try
-    (Integer/parseInt char)
+    (Integer/parseInt (str char))
     true
-    (catch Exception e
-      false)) )
+    (catch NumberFormatException _
+      false)))
 
 (is-digit? "9")
 
