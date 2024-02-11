@@ -16,3 +16,6 @@
 
 (deftest it-returns-0-if-no-neighbor-is-symbol-bigger-number
   (is (= 0 (day3/sum-of-parts [["." "3" "4"]]))))
+
+(deftest it-returns-0-if-no-neighbor-is-symbol-only-numbers
+  (is (= 0 (day3/sum-of-parts [["3" "4"]]))))

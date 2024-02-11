@@ -14,6 +14,14 @@
   [char]
   (not (or (is-digit? char) (= "." char))))
 
+(defn is-in-graph?
+  "docstring"
+  [[x y] graph]
+  (let [graph-length (count (first graph))
+        graph-height (count graph)]
+    (and (> graph-length x) (> graph-height y) (not (neg-int? x)) (not (neg-int? y)))))
+
+
 (defn get-graph-value
   "docstring"
   [graph [x y]]
@@ -31,8 +39,8 @@
         (empty? remaining)
         (if (empty? current-num)
           0
-          (let [left-neighbor [(dec current-num-index) 0]]
-            (if (is-symbol? (get-graph-value graph left-neighbor))
+          (let [left-neighbor [(dec current-num-index) 0]]  ; add more tests, change to all-neighbors or something. tdd can be weird
+            (if (and (is-in-graph? left-neighbor graph) (is-symbol? (get-graph-value graph left-neighbor)))
               (Integer/parseInt current-num)
               0)))
         (is-digit? (first remaining))
