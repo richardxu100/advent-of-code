@@ -9,19 +9,33 @@
     (catch NumberFormatException _
       false)))
 
+(defn is-symbol?
+  "docstring"
+  [char]
+  (not (or (is-digit? char) (= "." char))))
+
+(defn get-graph-value
+  "docstring"
+  [graph [x y]]
+  (nth (nth graph y) x))
 
 (defn sum-of-parts
   "docstring"
   [graph]
   (let [row (first graph)]
-    (loop [remaining row
-           current-num ""]
+    (loop [index 0
+           remaining row
+           current-num ""
+           current-num-index nil]
       (cond
         (empty? remaining)
         (if (empty? current-num)
           0
-          (Integer/parseInt current-num))
+          (let [left-neighbor [(dec current-num-index) 0]]
+            (if (is-symbol? (get-graph-value graph left-neighbor))
+              (Integer/parseInt current-num)
+              0)))
         (is-digit? (first remaining))
-        (recur (rest remaining) (str current-num (first remaining)))
+        (recur (inc index) (rest remaining) (str current-num (first remaining)) (if (nil? current-num-index) index current-num-index))
         :else
-        (recur (rest remaining) current-num)))))
+        (recur (inc index) (rest remaining) current-num current-num-index)))))
