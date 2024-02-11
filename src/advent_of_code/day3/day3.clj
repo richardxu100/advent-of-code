@@ -45,7 +45,7 @@
   (let [all-neighbors (set (apply concat (map (fn [x] (find-neighbor-indices x y))
                                               (range current-num-index (+ current-num-index (count current-num)))) ))]
     (->> all-neighbors
-         (filter (fn [coord] (is-in-graph? graph coord)))
+         (filter #(is-in-graph? graph %))
          (map #(get-graph-value graph %))
          (some is-symbol?)) ))
 
