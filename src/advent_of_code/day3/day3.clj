@@ -21,11 +21,18 @@
         graph-height (count graph)]
     (and (> graph-length x) (> graph-height y) (not (neg-int? x)) (not (neg-int? y)))))
 
-
 (defn get-graph-value
   "docstring"
   [graph [x y]]
   (nth (nth graph y) x))
+
+(defn is-valid-num
+  "docstring"
+  [current-num current-num-index y graph]
+  (let [left-neighbor [(dec current-num-index) 0]
+        right-neighbor [(+ current-num-index (count current-num)) 0]]  ; add more tests, change to all-neighbors or something. tdd can be weird
+    (or (and (is-in-graph? left-neighbor graph) (is-symbol? (get-graph-value graph left-neighbor)))
+        (and (is-in-graph? right-neighbor graph) (is-symbol? (get-graph-value graph right-neighbor))))))
 
 (defn sum-of-parts
   "docstring"
@@ -34,18 +41,23 @@
     (loop [index 0
            remaining row
            current-num ""
-           current-num-index nil]
+           current-num-index nil
+           valid-nums []]
       (cond
         (empty? remaining)
         (if (empty? current-num)
           0
-          (let [left-neighbor [(dec current-num-index) 0]
-                right-neighbor [(+ current-num-index (count current-num)) 0]]  ; add more tests, change to all-neighbors or something. tdd can be weird
-            (if (or (and (is-in-graph? left-neighbor graph) (is-symbol? (get-graph-value graph left-neighbor)))
-                    (and (is-in-graph? right-neighbor graph) (is-symbol? (get-graph-value graph right-neighbor))))
-              (Integer/parseInt current-num)
-              0)))
+          (if (is-valid-num current-num current-num-index 0 graph)
+            (let [all-valid-nums (conj valid-nums (Integer/parseInt current-num))]
+              (apply + all-valid-nums))
+            0))
         (is-digit? (first remaining))
-        (recur (inc index) (rest remaining) (str current-num (first remaining)) (if (nil? current-num-index) index current-num-index))
+        (recur (inc index) (rest remaining) (str current-num (first remaining)) (if (nil? current-num-index)
+                                                                                  index
+                                                                                  current-num-index) valid-nums)
+        (not (empty? current-num))
+        (recur (inc index) (rest remaining) "" nil (if (is-valid-num current-num current-num-index 0 graph)
+                                                     (conj valid-nums (Integer/parseInt current-num))
+                                                     valid-nums))
         :else
-        (recur (inc index) (rest remaining) current-num current-num-index)))))
+        (recur (inc index) (rest remaining) current-num current-num-index valid-nums)))))

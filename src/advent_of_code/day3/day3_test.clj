@@ -22,3 +22,6 @@
 
 (deftest it-returns-number-if-right-neighbor-is-symbol
   (is (= 34 (day3/sum-of-parts [["3" "4" "*"]]))))
+
+(deftest it-returns-sum-of-multiple-numbers
+  (is (= 79 (day3/sum-of-parts [["3" "4" "*" "4" "5"]]))))

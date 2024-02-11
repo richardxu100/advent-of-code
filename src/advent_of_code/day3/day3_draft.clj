@@ -21,7 +21,6 @@
         graph-height (count graph)]
     (and (> graph-length x) (> graph-height y) (not (neg-int? x)) (not (neg-int? y)))))
 
-
 (defn is-digit?
   "Check if the given character represents a digit."
   [char]
@@ -83,7 +82,6 @@
 (find-valid-nums (first graph) 0 graph)
 
 ;(is-in-graph? [2 -1] graph)
-
 
 (sum-of-parts graph)
 
