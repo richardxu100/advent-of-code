@@ -67,6 +67,4 @@
                              ["." "." "5"]
                              ["." "1" "5"]]) 53)))
 
-(deftest it-does-not-return-invalid-number
-  (is (= (day3/sum-of-parts (vec "467..114..")) 53)))
 

@@ -63,14 +63,13 @@
       (if (empty? current-num)
         (apply + valid-nums)
         (if (is-valid-num current-num current-num-index y graph)
-          (let [all-valid-nums (conj valid-nums (Integer/parseInt current-num))]
-            (apply + all-valid-nums))
+          (let [all-valid-nums (conj valid-nums (Integer/parseInt current-num))] (apply + all-valid-nums))
           (apply + valid-nums)))
       (is-digit? (first remaining))
       (recur (inc index) (rest remaining) (str current-num (first remaining)) (if (nil? current-num-index)
                                                                                 index
                                                                                 current-num-index) valid-nums)
-      (not (empty? current-num))
+      (seq current-num)
       (recur (inc index) (rest remaining) "" nil (if (is-valid-num current-num current-num-index y graph)
                                                    (conj valid-nums (Integer/parseInt current-num))
                                                    valid-nums))
