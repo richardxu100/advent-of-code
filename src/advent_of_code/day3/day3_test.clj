@@ -54,5 +54,16 @@
   (is (= (day3/sum-of-parts [["3" "4" "."] ["." "." "*"]]) 34)))
 
 (deftest it-handles-multiple-rows
-  (is (= (day3/sum-of-parts [["3"] ["*"]
-                             ["4"] ["*"]]) 7)))
+  (is (= (day3/sum-of-parts [["3" "*"]
+                             ["4" "*"]]) 7)))
+
+(deftest it-handles-multiple-rows-with-more-complex-numbers
+  (is (= (day3/sum-of-parts [["3" "*" "."]
+                             ["4" "5" "*"]]) 48)))
+
+(deftest it-handles-many-rows-with-more-complex-numbers
+  (is (= (day3/sum-of-parts [["3" "*" "."]
+                             ["4" "5" "*"]
+                             ["." "." "5"]
+                             ["." "1" "5"]]) 53)))
+
