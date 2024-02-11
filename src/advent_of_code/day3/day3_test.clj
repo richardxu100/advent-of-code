@@ -41,6 +41,15 @@
 (deftest it-handles-top-right-neighbor
   (is (= (day3/sum-of-parts [["." "*"] ["3" "."]]) 3)))
 
+(deftest it-handles-top-left-neighbor
+  (is (= (day3/sum-of-parts [["*" "."] ["." "3"]]) 3)))
+
+(deftest it-handles-bottom-right-neighbor
+  (is (= (day3/sum-of-parts [["3" "."] ["." "*"]]) 3)))
+
+(deftest it-handles-bottom-left-neighbor
+  (is (= (day3/sum-of-parts [["." "3"] ["*" "."]]) 3)))
+
 (deftest it-handles-multiple-rows
   (is (= (day3/sum-of-parts [["3"] ["*"]
                              ["4"] ["*"]]) 7)))
