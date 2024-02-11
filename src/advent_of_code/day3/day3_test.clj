@@ -34,3 +34,7 @@
 
 (deftest it-handles-vertical-neighbor-symbols
   (is (= (day3/sum-of-parts [["3"] ["*"]]) 3)))
+
+(deftest it-handles-multiple-rows
+  (is (= (day3/sum-of-parts [["3"] ["*"]
+                             ["4"] ["*"]]) 7)))
