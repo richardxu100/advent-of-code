@@ -16,7 +16,7 @@
 
 (defn is-in-graph?
   "docstring"
-  [[x y] graph]
+  [graph [x y]]
   (let [graph-length (count (first graph))
         graph-height (count graph)]
     (and (> graph-length x) (> graph-height y) (not (neg-int? x)) (not (neg-int? y)))))
@@ -44,7 +44,7 @@
   [current-num current-num-index y graph]
   (let [all-neighbors (set (apply concat (map (fn [x] (find-neighbor-indices x y))
                                               (range current-num-index (+ current-num-index (count current-num)))) ))]
-    (some is-symbol? (map (fn [coord] (get-graph-value graph coord)) (filter (fn [coord] (is-in-graph? coord graph)) all-neighbors))) ))
+    (some is-symbol? (map (fn [coord] (get-graph-value graph coord)) (filter (fn [coord] (is-in-graph? graph coord)) all-neighbors))) ))
 
 (defn find-valid-nums
   "docstring"
