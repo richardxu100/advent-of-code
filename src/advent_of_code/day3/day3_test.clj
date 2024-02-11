@@ -28,3 +28,6 @@
 
 (deftest it-returns-sum-of-three-numbers
   (is (= 130 (day3/sum-of-parts [["3" "4" "*" "4" "5" "*" "5" "1"]]))))
+
+(deftest it-returns-only-valid-numbers
+  (is (= (day3/sum-of-parts [["*" "3" "4" "*" "4" "5" "." "51"]]) 79)))

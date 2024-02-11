@@ -46,11 +46,11 @@
       (cond
         (empty? remaining)
         (if (empty? current-num)
-          0
+          (apply + valid-nums)
           (if (is-valid-num current-num current-num-index 0 graph)
             (let [all-valid-nums (conj valid-nums (Integer/parseInt current-num))]
               (apply + all-valid-nums))
-            0))
+            (apply + valid-nums)))
         (is-digit? (first remaining))
         (recur (inc index) (rest remaining) (str current-num (first remaining)) (if (nil? current-num-index)
                                                                                   index
