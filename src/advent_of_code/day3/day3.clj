@@ -1,4 +1,5 @@
-(ns advent-of-code.day3.day3)
+(ns advent-of-code.day3.day3
+  (:require [clojure.string :as str]))
 
 (defn is-digit?
   "Check if the given character represents a digit."
@@ -81,3 +82,5 @@
   "docstring"
   [graph]
   (apply + (map-indexed (fn [y row] (find-valid-nums graph row y)) graph)))
+
+(sum-of-parts (map (fn [row] (str/split row #"")) (str/split (slurp "./src/advent_of_code/day3/graph-input.txt") #"\n")))
