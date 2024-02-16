@@ -63,7 +63,7 @@
     false
     (is-digit? (nth row (dec x)))))
 
-(defn another-find-valid-nums
+(defn find-valid-nums
   "docstring"
   [graph row y]
   (for [x (range (count row))
@@ -75,7 +75,7 @@
 (defn sum-of-parts
   "docstring"
   [graph]
-  (apply + (map-indexed (fn [y row] (apply + (another-find-valid-nums graph row y)) ) graph)))
+  (apply + (map-indexed (fn [y row] (apply + (find-valid-nums graph row y)) ) graph)))
 
 (let [graph (->
              "./src/advent_of_code/day3/graph-input.txt"
