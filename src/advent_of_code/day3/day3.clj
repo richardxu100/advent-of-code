@@ -68,7 +68,7 @@
   [graph row y]
   (for [x (range (count row))
         :let [current-num (get-current-num x row)]
-        :when (and (not (is-left-neighbor-digit? x row)) (not (empty? current-num)) (is-valid-num current-num x y graph))]
+        :when (and (not (is-left-neighbor-digit? x row)) (seq current-num) (is-valid-num current-num x y graph))]
     (Integer/parseInt current-num)
     ))
 
