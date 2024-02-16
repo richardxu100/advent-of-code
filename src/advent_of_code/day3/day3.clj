@@ -50,7 +50,7 @@
        (map #(get-graph-value graph %))
        (some is-symbol?)))
 
-(defn get-current-num
+(defn get-current-num-string
   "docstring"
   [x row]
   (apply str (take-while is-digit? (drop x row))))
@@ -68,11 +68,11 @@
   (apply + (for [x (range (count (first graph)))
                  y (range (count graph))
                  :let [row (nth graph y)
-                       current-num (get-current-num x row)]
+                       current-num-string (get-current-num-string x row)]
                  :when (and (not (is-left-neighbor-digit? x row))
-                            (seq current-num)
-                            (is-valid-num current-num x y graph))]
-             (Integer/parseInt current-num))))
+                            (seq current-num-string)
+                            (is-valid-num current-num-string x y graph))]
+             (Integer/parseInt current-num-string))))
 
 (let [graph (->
              "./src/advent_of_code/day3/graph-input.txt"
