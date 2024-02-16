@@ -53,8 +53,7 @@
 (defn get-current-num
   "docstring"
   [x row]
-  (apply str (take-while is-digit? (drop x row)))
-)
+  (apply str (take-while is-digit? (drop x row))))
 
 (defn is-left-neighbor-digit?
   "docstring"
@@ -63,19 +62,17 @@
     false
     (is-digit? (nth row (dec x)))))
 
-(defn find-valid-nums
-  "docstring"
-  [graph row y]
-  (for [x (range (count row))
-        :let [current-num (get-current-num x row)]
-        :when (and (not (is-left-neighbor-digit? x row)) (seq current-num) (is-valid-num current-num x y graph))]
-    (Integer/parseInt current-num)
-    ))
-
 (defn sum-of-parts
   "docstring"
   [graph]
-  (apply + (map-indexed (fn [y row] (apply + (find-valid-nums graph row y)) ) graph)))
+  (apply + (for [x (range (count (first graph)))
+                 y (range (count graph))
+                 :let [row (nth graph y)
+                       current-num (get-current-num x row)]
+                 :when (and (not (is-left-neighbor-digit? x row))
+                            (seq current-num)
+                            (is-valid-num current-num x y graph))]
+             (Integer/parseInt current-num))))
 
 (let [graph (->
              "./src/advent_of_code/day3/graph-input.txt"

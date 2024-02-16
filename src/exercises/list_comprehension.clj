@@ -28,15 +28,11 @@
 
 (def capital-letters (map char (range (int \A) (inc (int \Z)))))
 
-
-
 (for [letter-1 capital-letters
       letter-2 capital-letters
       :when (and (not (blacklisted letter-1))
-                 (not (blacklisted letter-2)))
-      ]
-  (str letter-1 letter-2)
-  )
+                 (not (blacklisted letter-2)))]
+  (str letter-1 letter-2))
 
 (for [number [1 2 3]
       :let [tripled (* number 3)]
@@ -53,6 +49,5 @@
 (apply max (for [number (range 100 1000)
                  another-number (range 100 1000)
                  :let [product (* number another-number)]
-                 :when (is-palindrome? (str product))
-                 ]
+                 :when (is-palindrome? (str product))]
              product))

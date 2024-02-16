@@ -82,9 +82,9 @@
   (apply + (map-indexed (fn [y row] (find-valid-gears graph row y)) graph)))
 
 (let [graph (->
-              "./src/advent_of_code/day3/graph-input.txt"
-              (slurp)
-              (str/split #"\n"))]
+             "./src/advent_of_code/day3/graph-input.txt"
+             (slurp)
+             (str/split #"\n"))]
   (->> graph
        (map (fn [row] (str/split row #"")))
        sum-of-parts))
