@@ -50,36 +50,32 @@
        (map #(get-graph-value graph %))
        (some is-symbol?)))
 
-(defn find-valid-nums
+(defn get-current-num
+  "docstring"
+  [x row]
+  (apply str (take-while is-digit? (drop x row)))
+)
+
+(defn is-left-neighbor-digit?
+  "docstring"
+  [x row]
+  (if (zero? x)
+    false
+    (is-digit? (nth row (dec x)))))
+
+(defn another-find-valid-nums
   "docstring"
   [graph row y]
-  (loop [index 0
-         remaining row
-         current-num ""
-         current-num-index nil
-         valid-nums []]
-    (cond
-      (empty? remaining)
-      (if (empty? current-num)
-        (apply + valid-nums)
-        (if (is-valid-num current-num current-num-index y graph)
-          (let [all-valid-nums (conj valid-nums (Integer/parseInt current-num))] (apply + all-valid-nums))
-          (apply + valid-nums)))
-      (is-digit? (first remaining))
-      (recur (inc index) (rest remaining) (str current-num (first remaining)) (if (nil? current-num-index)
-                                                                                index
-                                                                                current-num-index) valid-nums)
-      (seq current-num)
-      (recur (inc index) (rest remaining) "" nil (if (is-valid-num current-num current-num-index y graph)
-                                                   (conj valid-nums (Integer/parseInt current-num))
-                                                   valid-nums))
-      :else
-      (recur (inc index) (rest remaining) current-num current-num-index valid-nums))))
+  (for [x (range (count row))
+        :let [current-num (get-current-num x row)]
+        :when (and (not (is-left-neighbor-digit? x row)) (not (empty? current-num)) (is-valid-num current-num x y graph))]
+    (Integer/parseInt current-num)
+    ))
 
 (defn sum-of-parts
   "docstring"
   [graph]
-  (apply + (map-indexed (fn [y row] (find-valid-nums graph row y)) graph)))
+  (apply + (map-indexed (fn [y row] (apply + (another-find-valid-nums graph row y)) ) graph)))
 
 (let [graph (->
              "./src/advent_of_code/day3/graph-input.txt"
