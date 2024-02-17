@@ -79,6 +79,11 @@
   [graph]
   (apply + (find-part-nums graph)))
 
+(defn sum-of-gear-ratios
+  "docstring"
+  [graph]
+  nil)
+
 (let [graph (->
              "./src/advent_of_code/day3/graph-input.txt"
              (slurp)

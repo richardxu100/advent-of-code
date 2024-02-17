@@ -68,3 +68,10 @@
                              ["." "1" "5"]]) 53)))
 
 
+;;;;;
+
+(deftest it-returns-gear-ratio-product
+  (is (= (day3/sum-of-gear-ratios [["3" "*" "."]
+                                   ["4" "5" "."]
+                                   ["." "." "5"]
+                                   ["." "1" "5"]]) 135)))
