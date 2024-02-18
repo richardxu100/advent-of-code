@@ -39,12 +39,8 @@
 
 (defn get-number-neighbors [x y numbers-with-coords]
   (let [neighbors (day3/find-neighbor-indices x y)]
-    (do
-      (println "neighbors: " neighbors)
-      (println "numbers-with-coords: " numbers-with-coords)
-      (println "filtered-numbers-with-coords: " (filter #(is-in-neighbors? neighbors %) numbers-with-coords))
-      (map :val (filter #(is-in-neighbors? neighbors %) numbers-with-coords)))
-    ))
+    (map :val (filter #(is-in-neighbors? neighbors %) numbers-with-coords)))
+  )
 
 ;; I need to use number coords (so add some more spaces, for numbers that are more than one char. More complex neighbors logic)
 ;
@@ -68,3 +64,11 @@
   [graph]
   (apply + (get-gear-ratios graph)))
 
+
+(let [graph (->
+              "./src/advent_of_code/day3/graph-input.txt"
+              (slurp)
+              (str/split #"\n"))]
+  (->> graph
+       (map (fn [row] (str/split row #"")))
+       sum-of-gear-ratios))
