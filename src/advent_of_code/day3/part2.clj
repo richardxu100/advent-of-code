@@ -1,91 +1,67 @@
 (ns advent-of-code.day3.part2
-  (:require [clojure.string :as str]))
+  (:require [advent-of-code.day3.day3 :as day3]
+            [advent-of-code.utils.utils :as utils]
+            [clojure.set :as set]
+            [clojure.string :as str]
+            [clojure.spec.alpha :as s]))
 
-(defn is-digit?
-  "Check if the given character represents a digit."
-  [char]
-  (try
-    (Integer/parseInt (str char))
-    true
-    (catch NumberFormatException _
-      false)))
+(def graph-input [["3" "*" "."]
+                  ["4" "5" "."]
+                  ["." "." "5"]
+                  ["." "1" "5"]])
 
-(defn is-symbol?
-  "docstring"
-  [char]
-  (not (or (is-digit? char) (= "." char))))
 
-(defn is-in-graph?
-  "docstring"
-  [graph [x y]]
-  (let [graph-length (count (first graph))
-        graph-height (count graph)]
-    (and (> graph-length x) (> graph-height y) (not (neg-int? x)) (not (neg-int? y)))))
-
-(defn get-graph-value
-  "docstring"
-  [graph [x y]]
-  (nth (nth graph y) x))
-
-(defn find-neighbor-indices
-  "docstring"
-  [x y]
-  [[(- x 1) (- y 1)]
-   [(- x 1) y]
-   [(- x 1) (+ y 1)]
-   [x (- y 1)]
-   [x (+ y 1)]
-   [(+ x 1) (- y 1)]
-   [(+ x 1) y]
-   [(+ x 1) (+ y 1)]])
-
-(defn is-valid-num
-  "docstring"
-  [current-num current-num-index y graph]
-  (->> (range current-num-index (+ current-num-index (count current-num)))
-       (map #(find-neighbor-indices % y))
-       (apply concat)
-       (set)
-       (filter #(is-in-graph? graph %))
-       (map #(get-graph-value graph %))
-       (some is-symbol?)))
-
-(defn find-valid-gears
-  "docstring"
-  [graph row y]
-  (loop [index 0
-         remaining row
-         current-num ""
-         current-num-index nil
-         valid-nums []]
-    (cond
-      (empty? remaining)
-      (if (empty? current-num)
-        (apply + valid-nums)
-        (if (is-valid-num current-num current-num-index y graph)
-          (let [all-valid-nums (conj valid-nums (Integer/parseInt current-num))] (apply + all-valid-nums))
-          (apply + valid-nums)))
-      (is-digit? (first remaining))
-      (recur (inc index) (rest remaining) (str current-num (first remaining)) (if (nil? current-num-index)
-                                                                                index
-                                                                                current-num-index) valid-nums)
-      (seq current-num)
-      (recur (inc index) (rest remaining) "" nil (if (is-valid-num current-num current-num-index y graph)
-                                                   (conj valid-nums (Integer/parseInt current-num))
-                                                   valid-nums))
-      :else
-      (recur (inc index) (rest remaining) current-num current-num-index valid-nums))))
-
-(defn sum-of-parts
+(defn parse-numbers-with-coords
   "docstring"
   [graph]
-  (apply + (map-indexed (fn [y row] (find-valid-gears graph row y)) graph)))
+  (let [formatted-graph (map #(apply str %) graph)]
+    (flatten (map-indexed (fn [y row] (let [results (utils/re-pos #"\d+" row)]
+                                        (map (fn [[x number]] {:coord [x y] :val (Integer/parseInt number)}) results)
+                                        )) formatted-graph)))
+  )
 
-(let [graph (->
-             "./src/advent_of_code/day3/graph-input.txt"
-             (slurp)
-             (str/split #"\n"))]
-  (->> graph
-       (map (fn [row] (str/split row #"")))
-       sum-of-parts))
+(parse-numbers-with-coords graph-input)
+
+
+(defn get-coords-number-takes-up [number-with-coords]
+  (let [[x y] (:coord number-with-coords)
+        num-length (count (str (:val number-with-coords)))]
+    (set (map (fn [index] (list (+ x index) y)) (range num-length))))
+  )
+
+
+(defn is-in-neighbors? [neighbors number-with-coords]
+  (if (seq (set/intersection (set neighbors) (get-coords-number-takes-up number-with-coords)))
+    true
+    false))
+
+;(is-in-neighbors? [[0 0]] {:coord [1 0], :val 3})
+
+(defn get-number-neighbors [x y numbers-with-coords]
+  (let [neighbors (day3/find-neighbor-indices x y)]
+    (do
+      ;(println "neighbors: " neighbors)
+      ;(println "numbers-with-coords: " numbers-with-coords)
+      ;(println "filtered-numbers-with-coords: " (filter #(is-in-neighbors? neighbors %) numbers-with-coords))
+      (map :val (filter #(is-in-neighbors? neighbors %) numbers-with-coords)))
+    ))
+
+;; I need to use number coords (so add some more spaces, for numbers that are more than one char. More complex neighbors logic)
+;
+(get-number-neighbors 1 0 (parse-numbers-with-coords graph-input))
+
+(defn is-gear-symbol? [point]
+  (= point "*"))
+
+(defn sum-of-gear-ratios
+  "docstring"
+  [graph]
+  (apply + (for [x (range (count (first graph)))
+         y (range (count graph))
+         :let [point (nth (nth graph y) x)
+               numbers-with-coords (parse-numbers-with-coords graph)
+               number-neighbors (get-number-neighbors x y numbers-with-coords)]
+         :when (and (is-gear-symbol? point)
+                    (= (count number-neighbors) 2))]
+     (apply * number-neighbors))))
 

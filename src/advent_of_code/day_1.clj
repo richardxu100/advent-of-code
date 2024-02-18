@@ -25,7 +25,6 @@
         valuesForList (map #(+ (* 10 (leftmostNumber %)) (rightMostNumber %)) stringList)]
     (reduce + valuesForList)))
 
-(println (result))
 
 (defn result-with-threading
   "docstring"

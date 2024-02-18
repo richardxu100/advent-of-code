@@ -1,5 +1,7 @@
 (ns advent-of-code.day3.day3
-  (:require [clojure.string :as str]))
+  (:require [clojure.set :as set]
+            [clojure.string :as str]
+            [advent-of-code.utils.utils :as utils]))
 
 (defn is-digit?
   "Check if the given character represents a digit."
@@ -79,15 +81,10 @@
   [graph]
   (apply + (find-part-nums graph)))
 
-(defn sum-of-gear-ratios
-  "docstring"
-  [graph]
-  nil)
-
 (let [graph (->
-             "./src/advent_of_code/day3/graph-input.txt"
-             (slurp)
-             (str/split #"\n"))]
+              "./src/advent_of_code/day3/graph-input.txt"
+              (slurp)
+              (str/split #"\n"))]
   (->> graph
        (map (fn [row] (str/split row #"")))
        sum-of-part-nums))
