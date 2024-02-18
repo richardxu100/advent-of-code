@@ -20,8 +20,6 @@
                                         )) formatted-graph)))
   )
 
-(parse-numbers-with-coords graph-input)
-
 
 (defn get-coords-number-takes-up [number-with-coords]
   (let [[x y] (:coord number-with-coords)
@@ -31,33 +29,27 @@
 
 
 (defn is-in-neighbors? [neighbors number-with-coords]
-  (if (seq (set/intersection (set neighbors) (get-coords-number-takes-up number-with-coords)))
-    true
-    false))
-
-;(is-in-neighbors? [[0 0]] {:coord [1 0], :val 3})
+  (boolean (seq (set/intersection (set neighbors) (get-coords-number-takes-up number-with-coords)))))
 
 (defn get-number-neighbors [x y numbers-with-coords]
   (let [neighbors (day3/find-neighbor-indices x y)]
     (map :val (filter #(is-in-neighbors? neighbors %) numbers-with-coords)))
   )
 
-;; I need to use number coords (so add some more spaces, for numbers that are more than one char. More complex neighbors logic)
-;
-(get-number-neighbors 1 0 (parse-numbers-with-coords graph-input))
-
 (defn is-gear-symbol? [point]
   (= point "*"))
 
 (defn get-gear-ratios [graph]
-  (for [x (range (count (first graph)))
-        y (range (count graph))
-        :let [point (nth (nth graph y) x)
-              numbers-with-coords (parse-numbers-with-coords graph)
-              number-neighbors (get-number-neighbors x y numbers-with-coords)]
-        :when (and (is-gear-symbol? point)
-                   (= (count number-neighbors) 2))]
-    (apply * number-neighbors)))
+  (let [numbers-with-coords (parse-numbers-with-coords graph)]
+    (for [x (range (count (first graph)))
+          y (range (count graph))
+          :let [point (nth (nth graph y) x)
+                number-neighbors (get-number-neighbors x y numbers-with-coords)]
+          :when (and (is-gear-symbol? point)
+                     (= (count number-neighbors) 2))]
+      (apply * number-neighbors)))
+    )
+
 
 (defn sum-of-gear-ratios
   "docstring"
