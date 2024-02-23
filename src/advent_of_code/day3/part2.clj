@@ -33,7 +33,7 @@
 
 (defn get-number-neighbors [x y numbers-with-coords]
   (let [neighbors (day3/find-neighbor-indices x y)]
-    (map :val (filter #(is-in-neighbors? neighbors %) numbers-with-coords)))
+    (map :val (filterv #(is-in-neighbors? neighbors %) numbers-with-coords)))
   )
 
 (defn is-gear-symbol? [point]
@@ -57,10 +57,10 @@
   (apply + (get-gear-ratios graph)))
 
 
-(let [graph (->
-              "./src/advent_of_code/day3/graph-input.txt"
-              (slurp)
-              (str/split #"\n"))]
-  (->> graph
-       (map (fn [row] (str/split row #"")))
-       sum-of-gear-ratios))
+;(let [graph (->
+;              "./src/advent_of_code/day3/graph-input.txt"
+;              (slurp)
+;              (str/split #"\n"))]
+;  (->> graph
+;       (map (fn [row] (str/split row #"")))
+;       sum-of-gear-ratios))
