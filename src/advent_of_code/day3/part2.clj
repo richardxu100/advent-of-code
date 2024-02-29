@@ -10,31 +10,24 @@
                   ["." "." "5"]
                   ["." "1" "5"]])
 
-
 (defn parse-numbers-with-coords
   "docstring"
   [graph]
   (let [formatted-graph (map #(apply str %) graph)]
     (flatten (map-indexed (fn [y row] (let [results (utils/re-pos #"\d+" row)]
-                                        (map (fn [[x number]] {:coord [x y] :val (Integer/parseInt number)}) results)
-                                        )) formatted-graph)))
-  )
-
+                                        (map (fn [[x number]] {:coord [x y] :val (Integer/parseInt number)}) results))) formatted-graph))))
 
 (defn get-coords-number-takes-up [number-with-coords]
   (let [[x y] (:coord number-with-coords)
         num-length (count (str (:val number-with-coords)))]
-    (set (map (fn [index] (list (+ x index) y)) (range num-length))))
-  )
-
+    (set (map (fn [index] (list (+ x index) y)) (range num-length)))))
 
 (defn is-in-neighbors? [neighbors number-with-coords]
   (boolean (seq (set/intersection (set neighbors) (get-coords-number-takes-up number-with-coords)))))
 
 (defn get-number-neighbors [x y numbers-with-coords]
   (let [neighbors (day3/find-neighbor-indices x y)]
-    (map :val (filterv #(is-in-neighbors? neighbors %) numbers-with-coords)))
-  )
+    (map :val (filterv #(is-in-neighbors? neighbors %) numbers-with-coords))))
 
 (defn is-gear-symbol? [point]
   (= point "*"))
@@ -47,20 +40,17 @@
                 number-neighbors (get-number-neighbors x y numbers-with-coords)]
           :when (and (is-gear-symbol? point)
                      (= (count number-neighbors) 2))]
-      (apply * number-neighbors)))
-    )
-
+      (apply * number-neighbors))))
 
 (defn sum-of-gear-ratios
   "docstring"
   [graph]
   (apply + (get-gear-ratios graph)))
 
-
-;(let [graph (->
-;              "./src/advent_of_code/day3/graph-input.txt"
-;              (slurp)
-;              (str/split #"\n"))]
-;  (->> graph
-;       (map (fn [row] (str/split row #"")))
-;       sum-of-gear-ratios))
+(let [graph (->
+             "./src/advent_of_code/day3/graph-input.txt"
+             (slurp)
+             (str/split #"\n"))]
+  (->> graph
+       (map (fn [row] (str/split row #"")))
+       sum-of-gear-ratios))
