@@ -21,10 +21,21 @@
 ;  ;Doing TDD here sounds like the move
 ;  )
 
+(defn in-range [seed source-start range]
+  (if (< seed source-start)
+    false
+    (>= (+ source-start range) seed)))
+
 (defn calc-result
   "docstring"
   [seeds maps]
   (let [only-entry (first maps)
+        source-start (:source-start only-entry)
+        destination-start (:destination-start only-entry)
+        range (:range only-entry)
+        seed (first seeds)
         offset (- (:destination-start only-entry) (:source-start only-entry))]
-    (+ (first seeds) offset)
+    (if (in-range seed source-start range)
+      (+ seed offset)
+      seed)
     ))
