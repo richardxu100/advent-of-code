@@ -9,3 +9,6 @@
 
 (deftest it-returns-basic-target-mapping
   (is (= 25 (day5/calc-result [22] [{:destination-start 23 :source-start 20 :range 50}]))))
+
+(deftest it-returns-basic-target-mapping-2
+  (is (= 51 (day5/calc-result [22] [{:destination-start 39 :source-start 10 :range 50}]))))
