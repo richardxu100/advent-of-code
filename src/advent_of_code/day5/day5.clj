@@ -42,16 +42,17 @@
     )
   )
 
+(defn calc-location-for-seed [seed maps]
+  (loop [remaining-maps maps
+         current-val seed]
+    (cond
+      (empty? remaining-maps)
+      current-val
+      :else
+      (recur (rest remaining-maps) (calc-destination current-val (first remaining-maps))))
+    ))
+
 (defn calc-result
   "docstring"
   [seeds maps]
-  (let [seed (first seeds)]
-    (loop [remaining-maps maps
-           current-val seed]
-      (cond
-        (empty? remaining-maps)
-        current-val
-        :else
-        (recur (rest remaining-maps) (calc-destination current-val (first remaining-maps))))
-      )
-    ))
+  (apply min (map (fn [seed] (calc-location-for-seed seed maps)) seeds)))
