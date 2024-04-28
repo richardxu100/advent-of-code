@@ -13,6 +13,9 @@
 (deftest it-returns-basic-target-mapping-2
   (is (= 51 (day5/calc-result [22] [[{:destination-start 39 :source-start 10 :range 50}]]))))
 
+(deftest it-returns-negative-value-mapping
+  (is (= 16 (day5/calc-result [22] [[{:destination-start 4 :source-start 10 :range 50}]]))))
+
 (deftest it-returns-seed-value-if-no-mapping
   (is (= 22 (day5/calc-result [22] [[{:destination-start 39 :source-start 10 :range 4}]]))))
 
