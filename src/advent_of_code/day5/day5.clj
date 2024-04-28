@@ -45,7 +45,13 @@
 (defn calc-result
   "docstring"
   [seeds maps]
-  (let [only-map (first maps)
-        seed (first seeds)]
-    (calc-destination seed only-map)
+  (let [seed (first seeds)]
+    (loop [remaining-maps maps
+           current-val seed]
+      (cond
+        (empty? remaining-maps)
+        current-val
+        :else
+        (recur (rest remaining-maps) (calc-destination current-val (first remaining-maps))))
+      )
     ))
