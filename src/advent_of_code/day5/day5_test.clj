@@ -15,3 +15,6 @@
 
 (deftest it-returns-seed-value-if-no-mapping
   (is (= 22 (day5/calc-result [22] [{:destination-start 39 :source-start 10 :range 4}]))))
+
+(deftest it-returns-seed-value-if-no-mapping-2
+  (is (= 22 (day5/calc-result [22] [{:destination-start 15 :source-start 10 :range 4}]))))
