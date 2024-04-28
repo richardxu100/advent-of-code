@@ -29,3 +29,9 @@
 (deftest it-converts-through-multiple-maps
   (is (= 25 (day5/calc-result [21] [[{:destination-start 21 :source-start 20 :range 50}]
                                     [{:destination-start 4 :source-start 1 :range 100}]]))))
+
+(deftest it-converts-through-three-maps
+  (is (= 30 (day5/calc-result [21] [[{:destination-start 21 :source-start 20 :range 50}]
+                                    [{:destination-start 4 :source-start 1 :range 100}]
+                                    [{:destination-start 15 :source-start 10 :range 100}]
+                                    ]))))
