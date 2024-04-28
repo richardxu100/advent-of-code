@@ -1,5 +1,6 @@
 (ns advent-of-code.day5.day5
-  (:require [clojure.spec.alpha :as s]))
+  (:require [clojure.spec.alpha :as s]
+            [clojure.string :as str]))
 
 ;(defn construct-maps
 ;  "docstring"
@@ -56,3 +57,41 @@
   "docstring"
   [seeds maps]
   (apply min (map (fn [seed] (calc-location-for-seed seed maps)) seeds)))
+
+(defn parse-seeds
+  "docstring"
+  [input]
+  (map parse-long (rest (str/split (first (str/split-lines input)) #" "))))
+
+(defn parse-map [line]
+  (let [[destination-start source-start range] (map parse-long (str/split line #" "))]
+    {:destination-start destination-start :source-start source-start :range range}))
+
+(defn parse-maps
+  "docstring"
+  [input]
+  (loop [remaining-lines (rest (str/split-lines input))
+         maps []
+         current-map []]
+    (cond
+      (empty? remaining-lines)
+      (conj maps current-map)
+      (str/includes? (first remaining-lines) "map")
+      (if (seq current-map)
+        (recur (rest remaining-lines) (conj maps current-map) [])
+        (recur (rest remaining-lines) maps current-map))
+      :else
+      (if (seq (first remaining-lines))
+        (recur (rest remaining-lines) maps (conj current-map (parse-map (first remaining-lines))))
+        (recur (rest remaining-lines) maps current-map)))))
+
+(def maps (-> "./src/advent_of_code/day5/input.txt"
+              slurp
+              parse-maps))
+
+(def seeds (parse-seeds (-> "./src/advent_of_code/day5/input.txt"
+                            slurp)))
+
+
+
+(calc-result seeds maps)
