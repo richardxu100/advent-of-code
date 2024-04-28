@@ -41,3 +41,6 @@
                                     [{:destination-start 4 :source-start 1 :range 100}]
                                     [{:destination-start 15 :source-start 10 :range 100}]
                                     ]))))
+
+(deftest it-returns-lowest-location-number-for-any-seed
+  (is (= 5 (day5/calc-result [100, 3] [[{:destination-start 22 :source-start 20 :range 100}]]))))
