@@ -1,4 +1,5 @@
-(ns advent-of-code.day5.day5 (:require [clojure.spec.alpha :as s]))
+(ns advent-of-code.day5.day5
+  (:require [clojure.spec.alpha :as s]))
 
 ;(defn construct-maps
 ;  "docstring"
@@ -23,5 +24,7 @@
 (defn calc-result
   "docstring"
   [seeds maps]
-  (let [offset (first maps)]
+  (let [only-entry (first maps)
+        offset (- (:destination-start only-entry) (:source-start only-entry))]
+    (+ (first seeds) offset)
     ))
