@@ -21,21 +21,31 @@
 ;  ;Doing TDD here sounds like the move
 ;  )
 
-(defn in-range [seed source-start range]
+(defn in-range? [seed source-start range]
   (if (< seed source-start)
     false
     (>= (+ source-start range) seed)))
 
+(defn calc-destination [seed entries]
+  (loop [remaining-entries entries
+         current-entry (first entries)]
+    (cond
+      (empty? remaining-entries)
+      seed
+      (in-range? seed (:source-start current-entry) (:range current-entry))
+      (let [offset (- (:destination-start current-entry) (:source-start current-entry))]
+        (+ seed offset))
+      :else
+      (let [new-remaining-entries (rest remaining-entries)
+            new-current-entry (first new-remaining-entries)]
+        (recur new-remaining-entries new-current-entry)))
+    )
+  )
+
 (defn calc-result
   "docstring"
   [seeds maps]
-  (let [only-entry (first (first maps))
-        source-start (:source-start only-entry)
-        destination-start (:destination-start only-entry)
-        range (:range only-entry)
-        seed (first seeds)
-        offset (- (:destination-start only-entry) (:source-start only-entry))]
-    (if (in-range seed source-start range)
-      (+ seed offset)
-      seed)
+  (let [only-map (first maps)
+        seed (first seeds)]
+    (calc-destination seed only-map)
     ))
