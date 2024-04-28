@@ -8,4 +8,4 @@
 ; so need to develop a mapping
 
 (deftest it-returns-basic-target-mapping
-  (is (= 25 (day5/calc-result [22] [[100 0 3]]))))
+  (is (= 25 (day5/calc-result [22] [[23 20 50]]))))
