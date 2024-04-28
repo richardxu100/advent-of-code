@@ -29,7 +29,7 @@
 (defn calc-result
   "docstring"
   [seeds maps]
-  (let [only-entry (first maps)
+  (let [only-entry (first (first maps))
         source-start (:source-start only-entry)
         destination-start (:destination-start only-entry)
         range (:range only-entry)

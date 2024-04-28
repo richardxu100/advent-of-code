@@ -8,17 +8,17 @@
 ; so need to develop a mapping
 
 (deftest it-returns-basic-target-mapping
-  (is (= 25 (day5/calc-result [22] [{:destination-start 23 :source-start 20 :range 50}]))))
+  (is (= 25 (day5/calc-result [22] [[{:destination-start 23 :source-start 20 :range 50}]]))))
 
 (deftest it-returns-basic-target-mapping-2
-  (is (= 51 (day5/calc-result [22] [{:destination-start 39 :source-start 10 :range 50}]))))
+  (is (= 51 (day5/calc-result [22] [[{:destination-start 39 :source-start 10 :range 50}]]))))
 
 (deftest it-returns-seed-value-if-no-mapping
-  (is (= 22 (day5/calc-result [22] [{:destination-start 39 :source-start 10 :range 4}]))))
+  (is (= 22 (day5/calc-result [22] [[{:destination-start 39 :source-start 10 :range 4}]]))))
 
 (deftest it-returns-seed-value-if-no-mapping-2
-  (is (= 22 (day5/calc-result [22] [{:destination-start 15 :source-start 10 :range 4}]))))
+  (is (= 22 (day5/calc-result [22] [[{:destination-start 15 :source-start 10 :range 4}]]))))
 
 (deftest it-will-look-at-second-mapping-in-list
-  (is (= 25 (day5/calc-result [22] [{:destination-start 15 :source-start 10 :range 4}
-                                    {:destination-start 20 :source-start 17 :range 30 }]))))
+  (is (= 25 (day5/calc-result [22] [[{:destination-start 15 :source-start 10 :range 4}
+                                    {:destination-start 20 :source-start 17 :range 30 }]]))))
