@@ -18,3 +18,7 @@
 
 (deftest it-returns-seed-value-if-no-mapping-2
   (is (= 22 (day5/calc-result [22] [{:destination-start 15 :source-start 10 :range 4}]))))
+
+(deftest it-will-look-at-second-mapping-in-list
+  (is (= 25 (day5/calc-result [22] [{:destination-start 15 :source-start 10 :range 4}
+                                    {:destination-start 20 :source-start 17 :range 30 }]))))
