@@ -35,3 +35,9 @@
                                     [{:destination-start 4 :source-start 1 :range 100}]
                                     [{:destination-start 15 :source-start 10 :range 100}]
                                     ]))))
+
+(deftest it-returns-seed-through-multiple-maps
+  (is (= 1000 (day5/calc-result [1000] [[{:destination-start 21 :source-start 20 :range 50}]
+                                    [{:destination-start 4 :source-start 1 :range 100}]
+                                    [{:destination-start 15 :source-start 10 :range 100}]
+                                    ]))))
