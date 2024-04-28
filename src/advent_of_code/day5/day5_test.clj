@@ -8,4 +8,4 @@
 ; so need to develop a mapping
 
 (deftest it-returns-basic-target-mapping
-  (is (= 25 (day5/calc-result [22] [[23 20 50]]))))
+  (is (= 25 (day5/calc-result [22] [{:destination-start 23 :source-start 20 :range 50}]))))

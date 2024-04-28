@@ -23,4 +23,5 @@
 (defn calc-result
   "docstring"
   [seeds maps]
-  )
+  (let [offset (first maps)]
+    ))
