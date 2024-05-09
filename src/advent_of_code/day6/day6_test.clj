@@ -15,3 +15,6 @@
 
 (deftest it-returns-product-for-multiple-races
   (is (= (day6/margin-of-error [{:time 7 :record 9} {:time 15 :record 40}]) 32)))
+
+(deftest it-returns-product-for-3-races
+  (is (= (day6/margin-of-error [{:time 7 :record 9} {:time 15 :record 40} {:time 30 :record 200}]) 288)))
