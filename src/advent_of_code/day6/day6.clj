@@ -20,7 +20,7 @@
 (defn parse-input
   "docstring"
   []
-  (let [lines (-> "./src/advent_of_code/day6/input.txt"
+  (let [lines (-> "./src/advent_of_code/day6/new-input.txt"
                   slurp
                   (str/split #"\n")
                   )]
