@@ -12,3 +12,6 @@
 
 (deftest it-returns-0-for-impossible-record
   (is (= (day6/margin-of-error [{:time 15 :record 400}]) 0)))
+
+(deftest it-returns-product-for-multiple-races
+  (is (= (day6/margin-of-error [{:time 7 :record 9} {:time 15 :record 40}]) 32)))
