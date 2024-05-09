@@ -1,6 +1,7 @@
 (ns advent-of-code.day5.day5
   (:require [clojure.spec.alpha :as s]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [clojure.set :refer [union]]))
 
 (defn in-range? [seed source-start range]
   (if (< seed source-start)
