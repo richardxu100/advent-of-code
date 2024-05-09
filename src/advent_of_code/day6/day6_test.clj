@@ -8,3 +8,7 @@
 
 (deftest it-returns-for-simple-single-race-2
   (is (= (day6/margin-of-error [{:time 15 :record 40}]) 8)))
+
+
+(deftest it-returns-0-for-impossible-record
+  (is (= (day6/margin-of-error [{:time 15 :record 400}]) 0)))
