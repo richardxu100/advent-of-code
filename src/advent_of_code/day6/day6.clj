@@ -3,11 +3,15 @@
 (defn calc-distance [hold-time total-time]
   (* hold-time (- total-time hold-time)))
 
+(defn calc-margin-of-error-for-race
+  "docstring"
+  [race]
+  (let [total-time (:time race)
+        record (:record race)]
+    (count (for [hold-time (range total-time) :when (> (calc-distance hold-time total-time) record)]
+             hold-time))))
+
 (defn margin-of-error
   "docstring"
   [races]
-  (let [only-race (first races)
-        total-time (:time only-race)
-        record (:record only-race)]
-    (count (for [hold-time (range total-time) :when (> (calc-distance hold-time total-time) record)]
-       hold-time))))
+  (apply * (map calc-margin-of-error-for-race races)))
