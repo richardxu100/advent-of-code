@@ -13,3 +13,6 @@
 
 (deftest it-returns-three-of-a-kind
   (is (= (day7/calc-hand-type "11135") :three-of-a-kind)))
+
+(deftest it-returns-full-house
+  (is (= (day7/calc-hand-type "11133") :full-house)))

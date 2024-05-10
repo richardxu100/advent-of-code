@@ -56,4 +56,3 @@
   )
 
 (count-map "111234")
-(new-count-map "111234")
