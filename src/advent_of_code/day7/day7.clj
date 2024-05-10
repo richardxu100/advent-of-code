@@ -24,7 +24,7 @@
 (defn has-two-pair? [hand]
   (= (count hand) (+ 2 (count (set hand)))))
 
-(defn count-map [hand]
+(defn my-count-map [hand]
   (loop [remaining hand
          result {}]
     (if (empty? remaining)
@@ -32,6 +32,11 @@
       (if (contains? result (first remaining))
         (recur (rest remaining) (assoc result (first remaining) (inc (get result (first remaining)))))
         (recur (rest remaining) (assoc result (first remaining) 1))))))
+
+(defn count-map
+  "docstring"
+  [hand]
+  (reduce (fn [result item] (update result item (fnil inc 0))) {} hand)) ; fnil will first try to use inc, but if it's passed in nil, it will give a 0
 
 (defn has-three-of-a-kind? [hand]
   (some #(= 3 %) (vals (count-map hand))))
@@ -49,3 +54,6 @@
     :else
     :high-card)
   )
+
+(count-map "111234")
+(new-count-map "111234")
