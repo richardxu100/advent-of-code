@@ -84,7 +84,7 @@
 
 (defn get-hand-ranking
   "docstring"
-  [{:keys [hand]}]
+  [hand]
   (hand-ranking-map (calc-hand-type hand)))
 
 
