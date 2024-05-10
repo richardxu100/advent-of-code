@@ -101,21 +101,12 @@
         score1 (get-hand-ranking hand1)
         score2 (get-hand-ranking hand2)]
     (cond
-      (> score1 score2)
-      1
-      (< score1 score2)
-      -1
+      (not= score1 score2)
+      (compare score1 score2)
       :else
       (let [tie-score1 (convert-to-tie-comparator-number hand1)
             tie-score2 (convert-to-tie-comparator-number hand2)]
-        (cond
-          (> tie-score1 tie-score2)
-          1
-          (< tie-score1 tie-score2)
-          -1
-          :else
-          0)
-        ))))
+        (compare tie-score1 tie-score2)))))
 
 (defn calc-winnings
   "docstring"
