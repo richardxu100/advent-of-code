@@ -126,14 +126,21 @@
 
 
 (convert-to-tie-comparator-number "JJA34")
-(get-hand-ranking {:hand "JJ245" :bid 10})
 
 (def small-input "./src/advent_of_code/day7/small-input.txt")
+(def input "./src/advent_of_code/day7/input.txt")
 
 (defn parse-to-row [[hand bid]]
   {:hand hand :bid (parse-long bid)})
 
 (->> small-input
+     slurp
+     str/split-lines
+     (map #(str/split % #" "))
+     (map parse-to-row)
+     calc-winnings)
+
+(->> input
      slurp
      str/split-lines
      (map #(str/split % #" "))
