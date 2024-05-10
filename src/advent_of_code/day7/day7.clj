@@ -24,10 +24,24 @@
 (defn has-two-pair? [hand]
   (= (count hand) (+ 2 (count (set hand)))))
 
+(defn count-map [hand]
+  (loop [remaining hand
+         result {}]
+    (if (empty? remaining)
+      result
+      (if (contains? result (first remaining))
+        (recur (rest remaining) (assoc result (first remaining) (inc (get result (first remaining)))))
+        (recur (rest remaining) (assoc result (first remaining) 1))))))
+
+(defn has-three-of-a-kind? [hand]
+  (some #(= 3 %) (vals (count-map hand))))
+
 (defn calc-hand-type
   "docstring"
   [hand]
   (cond
+    (has-three-of-a-kind? hand)
+    :three-of-a-kind
     (has-two-pair? hand)
     :two-pair
     (has-pair? hand)
