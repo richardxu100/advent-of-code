@@ -89,6 +89,8 @@
 (defn calc-winnings
   "docstring"
   [rows]
-  (apply + (map-indexed #(* (inc %1) (:bid %2)) (sort-by get-hand-ranking rows))))
+  (apply + (map-indexed
+             (fn [index row] (* (inc index) (:bid row)))
+             (sort-by get-hand-ranking rows))))
 
 (count-map "111234")
