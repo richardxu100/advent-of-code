@@ -17,7 +17,15 @@
 
 (ranking-map "A")
 
+(defn has-pair? [hand]
+  (< (count (set hand)) (count hand)))
+
 (defn calc-hand-type
   "docstring"
   [hand]
-  :high-card)
+  (cond
+    (has-pair? hand)
+    :one-pair
+    :else
+    :high-card)
+  )
