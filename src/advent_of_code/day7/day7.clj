@@ -1,6 +1,6 @@
 (ns advent-of-code.day7.day7)
 
-(def ranking-map
+(def card-ranking-map
   {"2" 2
    "3" 3
    "4" 4
@@ -15,7 +15,18 @@
    "K" 13
    "A" 14})
 
-(ranking-map "A")
+(card-ranking-map "A")
+
+(def hand-ranking-map
+  {
+   :high-card 1
+   :one-pair 2
+   :two-pair 3
+   :three-of-a-kind 4
+   :full-house 5
+   :four-of-a-kind 6
+   :five-of-a-kind 7
+   })
 
 (defn has-pair? [hand]
   (= (count hand) (inc (count (set hand)))))
@@ -68,6 +79,11 @@
     :one-pair
     :else
     :high-card)
+  )
+
+(defn calc-winnings
+  "docstring"
+  [rows]
   )
 
 (count-map "111234")

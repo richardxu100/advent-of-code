@@ -22,3 +22,6 @@
 
 (deftest it-returns-five-of-a-kind
   (is (= (day7/calc-hand-type "KKKKK") :five-of-a-kind)))
+
+(deftest it-returns-basic-total-winnings
+  (is (= (day7/calc-winnings [{:hand "12345" :bid 10}]) 10)))
