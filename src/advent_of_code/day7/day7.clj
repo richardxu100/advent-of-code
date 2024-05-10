@@ -18,13 +18,18 @@
 (ranking-map "A")
 
 (defn has-pair? [hand]
-  (< (count (set hand)) (count hand)))
+  (= (count hand) (inc (count (set hand)))))
 
+
+(defn has-two-pair? [hand]
+  (= (count hand) (+ 2 (count (set hand)))))
 
 (defn calc-hand-type
   "docstring"
   [hand]
   (cond
+    (has-two-pair? hand)
+    :two-pair
     (has-pair? hand)
     :one-pair
     :else
