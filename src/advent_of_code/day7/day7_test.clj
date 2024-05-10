@@ -25,3 +25,6 @@
 
 (deftest it-returns-basic-total-winnings
   (is (= (day7/calc-winnings [{:hand "12345" :bid 10}]) 10)))
+
+(deftest it-returns-total-winnings-for-two-hands
+  (is (= (day7/calc-winnings [{:hand "12345" :bid 10} {:hand "11234" :bid 30}]) 70)))
