@@ -84,7 +84,7 @@
 (defn get-hand-ranking
   "docstring"
   [{:keys [hand]}]
-  (hand-ranking-map hand))
+  (hand-ranking-map (calc-hand-type hand)))
 
 
 (defn convert-to-tie-comparator-number
@@ -92,10 +92,12 @@
   [hand]
   (apply + (map-indexed (fn [index card] (* (Math/pow 20 index) (card-ranking-map card))) (reverse hand))))
 
-(defn compare-hands
+(defn compare-rows
   "docstring"
-  [hand1 hand2]
-  (let [score1 (get-hand-ranking hand1)
+  [row1 row2]
+  (let [hand1 (:hand row1)
+        hand2 (:hand row2)
+        score1 (get-hand-ranking hand1)
         score2 (get-hand-ranking hand2)]
     (cond
       (> score1 score2)
@@ -119,7 +121,8 @@
   [rows]
   (apply + (map-indexed
              (fn [index row] (* (inc index) (:bid row)))
-             (sort compare-hands rows))))
+             (sort compare-rows rows))))
 
 
-(convert-to-tie-comparator-number "23456")
+(convert-to-tie-comparator-number "JJA34")
+(get-hand-ranking {:hand "JJ245" :bid 10})
