@@ -36,7 +36,7 @@
   (is (= (day7/calc-winnings [{:hand "JJ245" :bid 10} {:hand "JJA34" :bid 50} {:hand "JJT34" :bid 30}]) 220)))
 
 (deftest it-handles-more-complex-ties
-  (is (= (day7/calc-winnings [{:hand "JJ245" :bid 10} {:hand "33A34" :bid 50} {:hand "AAT34" :bid 30}]) 160)))
+  (is (= (day7/calc-winnings [{:hand "JJ245" :bid 10} {:hand "33AJ4" :bid 50} {:hand "AAT34" :bid 30}]) 160)))
 
 (deftest it-handles-more-complex-ties-2
   (is (= (day7/calc-winnings [{:hand "JJ245" :bid 10} {:hand "33334" :bid 60} {:hand "AAT34" :bid 30}]) 250)))
