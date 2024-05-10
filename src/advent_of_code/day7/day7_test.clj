@@ -10,3 +10,6 @@
 
 (deftest it-returns-two-pair-for-two-pair
   (is (= (day7/calc-hand-type "11335") :two-pair)))
+
+(deftest it-returns-three-of-a-kind
+  (is (= (day7/calc-hand-type "11135") :three-of-a-kind)))
