@@ -47,10 +47,15 @@
 (defn has-four-of-a-kind? [hand]
   (some #(= 4 %) (vals (count-map hand))))
 
+(defn has-five-of-a-kind? [hand]
+  (some #(= 5 %) (vals (count-map hand))))
+
 (defn calc-hand-type
   "docstring"
   [hand]
   (cond
+    (has-five-of-a-kind? hand)
+    :five-of-a-kind
     (has-four-of-a-kind? hand)
     :four-of-a-kind
     (has-full-house? hand)
