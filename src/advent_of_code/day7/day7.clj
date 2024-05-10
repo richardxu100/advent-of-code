@@ -1,31 +1,31 @@
 (ns advent-of-code.day7.day7)
 
 (def card-ranking-map
-  {"2" 2
-   "3" 3
-   "4" 4
-   "5" 5
-   "6" 6
-   "7" 7
-   "8" 8
-   "9" 9
-   "T" 10
-   "J" 11
-   "Q" 12
-   "K" 13
-   "A" 14})
+  {\2 2
+   \3 3
+   \4 4
+   \5 5
+   \6 6
+   \7 7
+   \8 8
+   \9 9
+   \T 10
+   \J 11
+   \Q 12
+   \K 13
+   \A 14})
 
 (card-ranking-map "A")
 
 (def hand-ranking-map
   {
-   :high-card 1
-   :one-pair 2
-   :two-pair 3
+   :high-card       1
+   :one-pair        2
+   :two-pair        3
    :three-of-a-kind 4
-   :full-house 5
-   :four-of-a-kind 6
-   :five-of-a-kind 7
+   :full-house      5
+   :four-of-a-kind  6
+   :five-of-a-kind  7
    })
 
 (defn has-pair? [hand]
@@ -86,11 +86,40 @@
   [{:keys [hand]}]
   (hand-ranking-map hand))
 
+
+(defn convert-to-tie-comparator-number
+  "docstring"
+  [hand]
+  (apply + (map-indexed (fn [index card] (* (Math/pow 20 index) (card-ranking-map card))) (reverse hand))))
+
+(defn compare-hands
+  "docstring"
+  [hand1 hand2]
+  (let [score1 (get-hand-ranking hand1)
+        score2 (get-hand-ranking hand2)]
+    (cond
+      (> score1 score2)
+      1
+      (< score1 score2)
+      -1
+      :else
+      (let [tie-score1 (convert-to-tie-comparator-number hand1)
+            tie-score2 (convert-to-tie-comparator-number hand2)]
+        (cond
+          (> tie-score1 tie-score2)
+          1
+          (< tie-score1 tie-score2)
+          -1
+          :else
+          0)
+        ))))
+
 (defn calc-winnings
   "docstring"
   [rows]
   (apply + (map-indexed
              (fn [index row] (* (inc index) (:bid row)))
-             (sort-by get-hand-ranking rows))))
+             (sort compare-hands rows))))
 
-(count-map "111234")
+
+(convert-to-tie-comparator-number "23456")
