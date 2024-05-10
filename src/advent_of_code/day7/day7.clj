@@ -20,4 +20,4 @@
 (defn calc-hand-type
   "docstring"
   [hand]
-  )
+  :high-card)
