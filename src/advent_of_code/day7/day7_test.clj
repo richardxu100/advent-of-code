@@ -16,3 +16,6 @@
 
 (deftest it-returns-full-house
   (is (= (day7/calc-hand-type "11133") :full-house)))
+
+(deftest it-returns-four-of-a-kind
+  (is (= (day7/calc-hand-type "11113") :four-of-a-kind)))
