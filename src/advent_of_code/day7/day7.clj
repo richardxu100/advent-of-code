@@ -84,6 +84,10 @@
 (defn calc-winnings
   "docstring"
   [rows]
-  )
+  (let [row (first rows)
+        hand (:hand row)
+        bid (:bid row)]
+    bid
+    ))
 
 (count-map "111234")
