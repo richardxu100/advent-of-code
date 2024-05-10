@@ -7,3 +7,6 @@
 
 (deftest it-returns-one-pair-for-pair
   (is (= (day7/calc-hand-type "11345") :one-pair)))
+
+(deftest it-returns-two-pair-for-two-pair
+  (is (= (day7/calc-hand-type "11335") :two-pair)))

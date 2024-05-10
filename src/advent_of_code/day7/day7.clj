@@ -20,6 +20,7 @@
 (defn has-pair? [hand]
   (< (count (set hand)) (count hand)))
 
+
 (defn calc-hand-type
   "docstring"
   [hand]
