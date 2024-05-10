@@ -133,19 +133,19 @@
 (defn parse-to-row [[hand bid]]
   {:hand hand :bid (parse-long bid)})
 
-(->> small-input
-     slurp
-     str/split-lines
-     (map #(str/split % #" "))
-     (map parse-to-row)
-     calc-winnings)
+(defn calc-winnings-for-input
+  "docstring"
+  [input]
+  (->> input
+       slurp
+       str/split-lines
+       (map #(str/split % #" "))
+       (map parse-to-row)
+       calc-winnings))
 
-(->> input
-     slurp
-     str/split-lines
-     (map #(str/split % #" "))
-     (map parse-to-row)
-     calc-winnings)
+(calc-winnings-for-input small-input)
+(calc-winnings-for-input input)
+
 
 ;(compare-rows {:hand "QQQJA", :bid 28})
 
