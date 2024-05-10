@@ -81,13 +81,14 @@
     :high-card)
   )
 
+(defn get-hand-ranking
+  "docstring"
+  [{:keys [hand]}]
+  (hand-ranking-map hand))
+
 (defn calc-winnings
   "docstring"
   [rows]
-  (let [row (first rows)
-        hand (:hand row)
-        bid (:bid row)]
-    bid
-    ))
+  (apply + (map-indexed #(* (inc %1) (:bid %2)) (sort-by get-hand-ranking rows))))
 
 (count-map "111234")
