@@ -31,3 +31,6 @@
 
 (deftest it-returns-total-winnings-for-three-hands
   (is (= (day7/calc-winnings [{:hand "12345" :bid 10} {:hand "11234" :bid 30} {:hand "AAA34" :bid 50}]) 220)))
+
+(deftest it-handles-basic-ties
+  (is (= (day7/calc-winnings [{:hand "11245" :bid 10} {:hand "11A34" :bid 50} {:hand "11T34" :bid 30}]) 220)))
