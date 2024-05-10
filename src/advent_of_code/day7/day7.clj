@@ -1,4 +1,5 @@
-(ns advent-of-code.day7.day7)
+(ns advent-of-code.day7.day7
+  (:require [clojure.string :as str]))
 
 (def card-ranking-map
   {\2 2
@@ -126,3 +127,18 @@
 
 (convert-to-tie-comparator-number "JJA34")
 (get-hand-ranking {:hand "JJ245" :bid 10})
+
+(def small-input "./src/advent_of_code/day7/small-input.txt")
+
+(defn parse-to-row [[hand bid]]
+  {:hand hand :bid (parse-long bid)})
+
+(->> small-input
+     slurp
+     str/split-lines
+     (map #(str/split % #" "))
+     (map parse-to-row)
+     calc-winnings)
+
+;(compare-rows {:hand "QQQJA", :bid 28})
+
