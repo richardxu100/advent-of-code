@@ -19,3 +19,6 @@
 
 (deftest it-returns-four-of-a-kind
   (is (= (day7/calc-hand-type "11113") :four-of-a-kind)))
+
+(deftest it-returns-five-of-a-kind
+  (is (= (day7/calc-hand-type "KKKKK") :five-of-a-kind)))
