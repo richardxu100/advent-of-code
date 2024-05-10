@@ -41,10 +41,15 @@
 (defn has-three-of-a-kind? [hand]
   (some #(= 3 %) (vals (count-map hand))))
 
+(defn has-full-house? [hand]
+  (and (has-three-of-a-kind? hand) (some #(= 2 %) (vals (count-map hand)))))
+
 (defn calc-hand-type
   "docstring"
   [hand]
   (cond
+    (has-full-house? hand)
+    :full-house
     (has-three-of-a-kind? hand)
     :three-of-a-kind
     (has-two-pair? hand)
