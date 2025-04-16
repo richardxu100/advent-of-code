@@ -45,3 +45,31 @@ list_of_ints
 
 (count (safe_lines list_of_ints))
 
+; Part 2
+
+(defn generate_line_permutations [line]
+  "Generates all variations of a line, minus an element"
+  (loop [permutations []
+         current_index 0]
+    (if (= current_index (count line))
+      permutations
+      (recur (conj permutations (vec (keep-indexed #(when (not= %1 current_index) %2) line))) (inc current_index)))))
+
+(defn generate_line_permutations_comprehension [line]
+  (for [i (range (count line))]
+    (vec (keep-indexed #(when (not= %1 i) %2) line))))
+
+(generate_line_permutations [1 2 3 4 5])
+(generate_line_permutations_comprehension [1 2 3 4 5])
+(generate_line_permutations [25 26 29 30 32 35 37 35])
+
+(defn new_safe_lines [lines]
+  (for [line lines
+        :when (or (is-line-safe? line) (some is-line-safe? (generate_line_permutations line)))]
+    line))
+
+(count (new_safe_lines list_of_ints))
+
+; Complete day 2 :- j
+
+
