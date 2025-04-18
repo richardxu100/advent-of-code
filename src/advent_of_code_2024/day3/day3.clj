@@ -124,8 +124,23 @@ found-multiplication-strings
                    total
                    (+ total (* (:x top-instruction) (:y top-instruction))))))))))
 
+(defn sum-enabled-instructions-with-reduce [ordered-instructions]
+  (let [[total _]
+        (reduce (fn [[total allow-mult] {:keys [type] :as instr}]
+                  (case type
+                    :do [total true]
+                    :dont [total false]
+                    :mult (if allow-mult
+                            (let [{:keys [x y]} instr]
+                              [(+ total (* x y)) allow-mult])
+                            [total allow-mult])))
+                [0 true]
+                ordered-instructions)]
+    total))
+
 (take 15 ordered-instructions)
 (sum-enabled-instructions ordered-instructions)
+(sum-enabled-instructions-with-reduce ordered-instructions)
 
 (filter #(= (:type %) :do) ordered-instructions)
 
