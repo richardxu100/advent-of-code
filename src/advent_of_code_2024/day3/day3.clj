@@ -1,31 +1,24 @@
 (ns advent-of-code-2024.day3.day3)
 
-(def test_input "foo mult(1,2) bar mult(42,8) baz mult(7,3)")
 (def mult_pattern #"mul\((\d+),(\d+)\)")
 (def do-pattern #"do\(\)")
 (def dont-pattern #"don't\(\)")
 
-(re-seq mult_pattern test_input)
-
 (def real-input (slurp "Desktop/code/clojure/advent-of-code/src/advent_of_code_2024/day3/day3_input.txt"))
-
-real-input
 
 (defn find-multiplication-strings [input]
   (re-seq mult_pattern input))
 
-(def found-multiplication-strings (find-multiplication-strings real-input))
-
-found-multiplication-strings
-
 (defn calculate-product [[_, x, y]]
-  (* (Integer/parseInt x) (Integer/parseInt y)))
+  (* (parse-long x) (parse-long y)))
 
-(calculate-product (first found-multiplication-strings))
+(defn part1 [input]
+  (->> input
+       find-multiplication-strings
+       (map calculate-product)
+       (apply +)))
 
-(defn calculate-sum-multiplications [multiplication-strings] (apply + (map calculate-product multiplication-strings)))
-
-(calculate-sum-multiplications found-multiplication-strings)
+(part1 real-input)
 
 (defn is-tracked-phrase? [phrase]
   (or (seq (find-multiplication-strings phrase))
@@ -99,7 +92,7 @@ found-multiplication-strings
     (if (every? empty? [remaining-do, remaining-dont, remaining-mult])
       ordered-instructions
       (let [lowest-index (find-lowest-index remaining-do remaining-dont remaining-mult)]
-        (condp = lowest-index
+        (case lowest-index
           :do (recur (rest remaining-do) remaining-dont remaining-mult (conj ordered-instructions (first remaining-do)))
           :dont (recur remaining-do (rest remaining-dont) remaining-mult (conj ordered-instructions (first remaining-dont)))
           :mult (recur remaining-do remaining-dont (rest remaining-mult) (conj ordered-instructions (first remaining-mult))))))))
