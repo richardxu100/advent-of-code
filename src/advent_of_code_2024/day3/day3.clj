@@ -113,7 +113,7 @@ found-multiplication-strings
     (if (empty? remaining-instructions)
       total
       (let [top-instruction (first remaining-instructions)]
-        (condp = (:type top-instruction)
+        (case (:type top-instruction)
           :do
           (recur (rest remaining-instructions) true total)
           :dont
@@ -124,6 +124,7 @@ found-multiplication-strings
                    total
                    (+ total (* (:x top-instruction) (:y top-instruction))))))))))
 
+; I've got a lot to learn about reduce. It's a nice way to avoid loop recur, which isn't the easiest thing to read
 (defn sum-enabled-instructions-with-reduce [ordered-instructions]
   (let [[total _]
         (reduce (fn [[total allow-mult] {:keys [type] :as instr}]
@@ -146,8 +147,10 @@ found-multiplication-strings
 
 ; correct!! : 
 
+(reduce + [1 2 3 4 5])
+; the other is just a fancy reduce that works on maps, and returns two values in the recursive loop. Also destructures each individual map using that weird syntax
 
-
+; Also play around with the clojure pattern matching library
 
 
 
