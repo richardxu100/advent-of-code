@@ -43,7 +43,7 @@
 
 (find-indices-for-multiplication real-input)
 
-(defn find-indices-for-do [input]
+(defn find-indices-for-do [[input]]
   (let [do-matcher (re-matcher do-pattern input)]
     (loop [matches []]
       (if (.find do-matcher)
