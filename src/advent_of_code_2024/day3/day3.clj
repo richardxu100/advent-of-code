@@ -31,19 +31,6 @@ found-multiplication-strings
   (or (seq (find-multiplication-strings phrase))
       (or (= phrase "do()") (= phrase "don't()"))))
 
-; (defn input_parser [input]
-  ; (loop [parsed_input_strings []
-         ; remaining_input input
-         ; current_phrase ""]
-    ; (cond
-      ; (empty? remaining_input) ; may have an off-by one error here
-      ; parsed_input_strings
-      ; (is-tracked-phrase? current_phrase)
-      ; (recur (conj parsed_input_strings current_phrase) remaining_input "") ; could have an off-by one error here too
-      ; :else
-      ; (recur parsed_input_strings (rest remaining_input) )
-      ; )))
-
 ;; Algorithm
 ;; Can find all indices of the multiplications. Find all indices of do () and don't () these won't overalp
 ;; Then determine the order of these commands, by their indices, and then represent the ordering in a list
