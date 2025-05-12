@@ -67,11 +67,13 @@
   (loop [left-els []
          right-els (rest update-line)
          current (first update-line)]
-    (if (empty? right-els)
-      (has-valid-left-els left-els current page-ordering-rules)
-      (if (not (and (has-valid-left-els left-els current page-ordering-rules) (has-valid-right-els right-els current page-ordering-rules)))
-        false
-        (recur (conj left-els current) (rest right-els) (first right-els))))))
+    (let [valid-left? (has-valid-left-els left-els current page-ordering-rules)
+          valid-right? (has-valid-right-els right-els current page-ordering-rules)]
+      (if (empty? right-els)
+        valid-left?
+        (if (not (and valid-left? valid-right?))
+          false
+          (recur (conj left-els current) (rest right-els) (first right-els)))))))
 
 ;(is-ordered-update? ex-rules-map [10 23 5 123])
 
@@ -96,3 +98,24 @@
 ;(def fake-input "./src/advent_of_code_2024/day5/test_input.txt")
 
 ;(find-ordered-updates fake-input)
+
+;; part2
+
+(defn find-unordered-updates [input]
+  (let [updates (parse-updates input)
+        page-ordering-rules (parse-page-ordering-rules input)]
+    (filter (complement #(is-ordered-update? page-ordering-rules %))) updates))
+
+(find-unordered-updates real-input)
+
+(defn ordering-rules-comparator [a b page-ordering-rules])
+
+(defn fix-order [update-line]
+  (sort-by ordering-rules-comparator update-line))
+
+;(defn generate-perms [nums]
+;  (loop [perms []
+;         tasks [{:current-perm [] :remaining-nums nums}]]
+;    (if (empty? tasks)
+;      perms
+;      (let [current-task (first tasks)])))) ;; brain is tired. Right here todo
