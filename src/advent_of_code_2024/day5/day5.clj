@@ -6,6 +6,32 @@
 (def real-input
   "./src/advent_of_code_2024/day5/day5_input.txt")
 
+(defn add-left-rule [left right rules-map]
+  (update-in rules-map [right :disallowed-right] (fnil conj #{}) left))
+
+(defn add-right-rule [left right rules-map]
+  (update-in rules-map [left :disallowed-left] (fnil conj #{}) right))
+
+;(add-left-rule 5 10 {})
+;(add-left-rule 5 10 {10 {:disallowed-right #{13 29}}})
+
+(defn add-rules [rules-map rule]
+  (let [[left right] (map parse-long (str/split rule #"\|"))]
+    (->> rules-map
+         (add-left-rule left right)
+         (add-right-rule left right))))
+
+;(add-rules {} "58|32")
+
+(defn build-rules-map [rules]
+  (loop [rules-map {}
+         remaining-rules rules]
+    (if (empty? remaining-rules)
+      rules-map
+      (recur (add-rules rules-map (first remaining-rules)) (rest remaining-rules)))))
+
+;(def ex-rules-map (build-rules-map ["58|32" "12|23" "32|51" "10|5"]))
+
 (defn parse-updates [input]
   (->> input
        slurp
@@ -16,32 +42,6 @@
        (map #(str/split % #","))
        (map (partial map parse-long))))
 
-(defn add-left-rule [left right rules-map]
-  (update-in rules-map [right :disallowed-right] (fnil conj #{}) left))
-
-(defn add-right-rule [left right rules-map]
-  (update-in rules-map [left :disallowed-left] (fnil conj #{}) right))
-
-(add-left-rule 5 10 {})
-(add-left-rule 5 10 {10 {:disallowed-right #{13 29}}})
-
-(defn add-rules [rules-map rule]
-  (let [[left right] (map parse-long (str/split rule #"\|"))]
-    (->> rules-map
-         (add-left-rule left right)
-         (add-right-rule left right))))
-
-(add-rules {} "58|32")
-
-(defn build-rules-map [rules]
-  (loop [rules-map {}
-         remaining-rules rules]
-    (if (empty? remaining-rules)
-      rules-map
-      (recur (add-rules rules-map (first remaining-rules)) (rest remaining-rules)))))
-
-(def ex-rules-map (build-rules-map ["58|32" "12|23" "32|51" "10|5"]))
-
 (defn parse-page-ordering-rules [input]
   (->> input
        slurp
@@ -50,8 +50,9 @@
        first
        build-rules-map))
 
-(parse-page-ordering-rules real-input)
+;(parse-page-ordering-rules real-input)
 ; (parse-updates real-input)
+
 (defn has-valid-left-els [left-els current page-ordering-rules]
   (let [disallowed-left-els (get-in page-ordering-rules [current :disallowed-left] #{})]
     (empty? (set/intersection (set left-els) disallowed-left-els))))
@@ -60,7 +61,7 @@
   (let [disallowed-right-els (get-in page-ordering-rules [current :disallowed-right] #{})]
     (empty? (set/intersection (set right-els) disallowed-right-els))))
 
-(has-valid-left-els #{5} 10 ex-rules-map)
+;(has-valid-left-els #{5} 10 ex-rules-map)
 
 (defn is-ordered-update? [page-ordering-rules update-line]
   (loop [left-els []
@@ -70,11 +71,9 @@
       (has-valid-left-els left-els current page-ordering-rules)
       (if (not (and (has-valid-left-els left-els current page-ordering-rules) (has-valid-right-els right-els current page-ordering-rules)))
         false
-        (recur (conj left-els current) (rest right-els) (first right-els)))))) ;; I think the issue, was needing to do (set rest)
+        (recur (conj left-els current) (rest right-els) (first right-els))))))
 
 ;(is-ordered-update? ex-rules-map [10 23 5 123])
-
-;(set/intersection #{1 2} #{2 3 4 5})
 
 (defn find-ordered-updates [input]
   (let [updates (parse-updates input)
@@ -89,8 +88,6 @@
        find-ordered-updates
        (map take-middle-element)
        (reduce +)))
-
-;(take-middle-element [1 2 21 4 5])
 
 (part1 real-input)
 
