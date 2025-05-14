@@ -12,8 +12,8 @@
 (defn add-right-rule [left right rules-map]
   (update-in rules-map [left :disallowed-left] (fnil conj #{}) right))
 
-;(add-left-rule 5 10 {})
-;(add-left-rule 5 10 {10 {:disallowed-right #{13 29}}})
+(comment (add-left-rule 5 10 {}))
+(comment (add-left-rule 5 10 {10 {:disallowed-right #{13 29}}}))
 
 (defn add-rules [rules-map rule]
   (let [[left right] (map parse-long (str/split rule #"\|"))]
@@ -106,20 +106,20 @@
                      1
                      -1)) update-line))
 
-(defn ex-sort
-  "docstring"
-  [nums]
-  (sort > nums))
-
-(defn ex-custom-sort
-  "docstring"
-  [nums]
-  (sort (fn [a b] (if (> a b)
-                   1
-                   -1))) nums)
-
-(ex-sort '(32 1 2 12 94))
-(ex-custom-sort '(32 1 2 12 94))
+;(defn ex-sort
+;  "docstring"
+;  [nums]
+;  (sort > nums))
+;
+;(defn ex-custom-sort
+;  "docstring"
+;  [nums]
+;  (sort (fn [a b] (if (> a b)
+;                   1
+;                   -1))) nums)
+;
+;(ex-sort '(32 1 2 12 94))
+;(ex-custom-sort '(32 1 2 12 94))
 (def ex-rules {10 {:disallowed-left #{5} :disallowed-right #{30}} 5 {:disallowed-right #{10} :disallowed-left #{30}}})
 
 (fix-unordered-update ex-rules '(5 10)) ;; todo: this method is messed up
