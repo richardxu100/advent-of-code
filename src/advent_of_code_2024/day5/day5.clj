@@ -1,7 +1,7 @@
 (ns advent-of-code-2024.day5.day5
   (:require
-   [clojure.string :as str]
-   [clojure.set :as set]))
+    [clojure.string :as str]
+    [clojure.set :as set]))
 
 (def real-input
   "./src/advent_of_code_2024/day5/day5_input.txt")
@@ -12,8 +12,8 @@
 (defn add-right-rule [left right rules-map]
   (update-in rules-map [left :disallowed-left] (fnil conj #{}) right))
 
-(comment (add-left-rule 5 10 {}))
-(comment (add-left-rule 5 10 {10 {:disallowed-right #{13 29}}}))
+(comment (add-left-rule 5 10 {})
+         (add-left-rule 5 10 {10 {:disallowed-right #{13 29}}}))
 
 (defn add-rules [rules-map rule]
   (let [[left right] (map parse-long (str/split rule #"\|"))]
@@ -21,7 +21,7 @@
          (add-left-rule left right)
          (add-right-rule left right))))
 
-;(add-rules {} "58|32")
+(comment (add-rules {} "58|32"))
 
 (defn build-rules-map [rules]
   (loop [rules-map {}
@@ -50,8 +50,9 @@
        first
        build-rules-map))
 
-;(parse-page-ordering-rules real-input)
-; (parse-updates real-input)
+(comment
+  (parse-page-ordering-rules real-input)
+  (parse-updates real-input))
 
 (defn has-valid-left-els [left-els current page-ordering-rules]
   (let [disallowed-left-els (get-in page-ordering-rules [current :disallowed-left] #{})]
@@ -93,42 +94,26 @@
 
 (part1 real-input)
 
-(find-ordered-updates real-input)
-
-;(def fake-input "./src/advent_of_code_2024/day5/test_input.txt")
-
-;(find-ordered-updates fake-input)
+(comment
+  (find-ordered-updates real-input)
+  (def fake-input "./src/advent_of_code_2024/day5/test_input.txt")
+  (find-ordered-updates fake-input))
 
 ;; part2
 
 (defn fix-unordered-update [page-ordering-rules update-line]
   (sort (fn [a b] (if (contains? (get-in page-ordering-rules [a :disallowed-left]) b)
-                     1
-                     -1)) update-line))
+                    1
+                    -1)) update-line))
 
-;(defn ex-sort
-;  "docstring"
-;  [nums]
-;  (sort > nums))
-;
-;(defn ex-custom-sort
-;  "docstring"
-;  [nums]
-;  (sort (fn [a b] (if (> a b)
-;                   1
-;                   -1))) nums)
-;
-;(ex-sort '(32 1 2 12 94))
-;(ex-custom-sort '(32 1 2 12 94))
-(def ex-rules {10 {:disallowed-left #{5} :disallowed-right #{30}} 5 {:disallowed-right #{10} :disallowed-left #{30}}})
+;(def ex-rules {10 {:disallowed-left #{5} :disallowed-right #{30}} 5 {:disallowed-right #{10} :disallowed-left #{30}}})
 
-(fix-unordered-update ex-rules '(5 10)) ;; todo: this method is messed up
+;(fix-unordered-update ex-rules '(5 10)) ;; todo: this method is messed up
 (defn fix-unordered-updates [input]
   (let [updates (parse-updates input)
         page-ordering-rules (parse-page-ordering-rules input)
         unordered-updates (filter (complement #(is-ordered-update? page-ordering-rules %)) updates)]
     (map (partial fix-unordered-update page-ordering-rules) unordered-updates)))
-
 
 (defn find-unordered-updates [input]
   (let [updates (parse-updates input)
@@ -136,11 +121,11 @@
         unordered-updates (filter (complement #(is-ordered-update? page-ordering-rules %)) updates)]
     unordered-updates))
 
-(fix-unordered-updates real-input)
-(find-unordered-updates real-input)
-
-(parse-page-ordering-rules real-input)
-(parse-updates real-input)
+(comment
+  (fix-unordered-updates real-input)
+  (find-unordered-updates real-input)
+  (parse-page-ordering-rules real-input)
+  (parse-updates real-input))
 
 (defn part2 [input]
   (->> input
