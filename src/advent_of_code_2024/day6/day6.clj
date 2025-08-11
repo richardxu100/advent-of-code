@@ -36,7 +36,6 @@
 
 (find-starting-pos test-graph)
 
-
 (defn next-dir
   [dir]
   (case dir
@@ -85,8 +84,6 @@ test-graph
 
 (is-in-graph? [[0 1 2 3 4] [0 1 2 3 4]] {:x 5 :y 1})
 
-(defn calc-path-indices [pos dir graph])
-
 (defn find-next-pos [pos dir]
   (let [x (:x pos)
         y (:y pos)]
@@ -111,7 +108,6 @@ test-graph
 (comment
   (find-next-destination {:x 1 :y 2} :S test-graph))
 
-
 (defn calc-distinct-positions [graph]
   (let [starting-pos (find-starting-pos graph)]
     (loop [current-pos starting-pos
@@ -127,7 +123,7 @@ test-graph
 (defn part1 [input]
   (let [graph (parse-graph input)
         distinct-positions (calc-distinct-positions graph)]
-     (filter #(is-in-graph? graph %) distinct-positions))) ; remove the last visited place
+     (filter #(is-in-graph? graph %) distinct-positions))) ; remove the last visited place, as that's out of bounds
 
 (part1 test-input)
 (part1 real-input)
