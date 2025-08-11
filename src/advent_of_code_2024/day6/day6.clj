@@ -12,6 +12,10 @@
 (def test-input
   "/Users/Richard/Desktop/code/clojure/advent-of-code/src/advent_of_code_2024/day6/test_input.txt")
 
+(def real-input
+  "/Users/Richard/Desktop/code/clojure/advent-of-code/src/advent_of_code_2024/day6/input.txt")
+
+
 (slurp test-input)
 
 (defn parse-graph [input]
@@ -99,7 +103,7 @@ test-graph
   (loop [current-pos pos]
     (let [next-pos (find-next-pos current-pos dir)]
       (if (not (is-in-graph? graph next-pos))
-        nil
+        next-pos
         (if (= "#" (get-graph-value graph next-pos))
           current-pos
           (recur next-pos))))))
@@ -113,12 +117,21 @@ test-graph
     (loop [current-pos starting-pos
            current-dir :N
            visited #{}]
-      (if (nil? current-pos)
+      (if (not (is-in-graph? graph current-pos))
         visited
         (let [next-destination (find-next-destination current-pos current-dir graph)]
           (recur next-destination (next-dir current-dir) (calc-updated-visited current-pos next-destination visited)))))))
 
 (calc-distinct-positions test-graph)
+
+(defn part1 [input]
+  (let [graph (parse-graph input)
+        distinct-positions (calc-distinct-positions graph)]
+     (filter #(is-in-graph? graph %) distinct-positions))) ; remove the last visited place
+
+(part1 test-input)
+(part1 real-input)
+
 
 
 
