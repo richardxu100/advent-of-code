@@ -65,14 +65,15 @@
   (gen-position-history 50 sample-instructions)
   (gen-position-history 50 real-instructions))
 
-(defn find-password [instructions]
+(defn part1 [instructions]
   (let [history (gen-position-history 50 instructions)]
     (count (filter zero? history))))
 
 (comment
-  (find-password sample-instructions)
-  (find-password real-instructions))
+  (part1 sample-instructions)
+  (part1 real-instructions))
 
+; this metho was hard to write, as it has to not double-count the 0 position
 (defn calc-left-crossings [pos rotation]
   (let [new-pos (- pos rotation)]
     (cond
@@ -120,12 +121,12 @@
                (rest remaining-instructions)
                (rest remaining-history))))))
 
-(gen-enriched-history sample-instructions)
+(comment
+  (gen-enriched-history sample-instructions))
 
 (defn part2 [instructions]
   (let [enriched-history (gen-enriched-history instructions)]
     (reduce + (map calc-total-zero-crossings enriched-history))))
-
 
 (part2 sample-instructions)
 (part2 real-instructions)
