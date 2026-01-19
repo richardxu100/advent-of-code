@@ -54,9 +54,9 @@
       :else
       (recur (inc length) (str n) (take (inc length) (str n))))))
 
-(part2-valid-id? 3)
-
-(apply str (drop 2 "123123"))
+(comment
+  (part2-valid-id? 3)
+  (apply str (drop 2 "123123")))
 
 (defn part2 [input]
   (let [ranges (parse-ranges input)
@@ -64,6 +64,7 @@
         valid-ids (filter part2-valid-id? all-ids)]
     (reduce + valid-ids)))
 
-(part2 sample-input)
-(part2 real-input)
+(comment
+  (part2 sample-input)
+  (part2 real-input))
 
