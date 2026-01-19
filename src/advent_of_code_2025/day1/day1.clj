@@ -35,8 +35,9 @@
       (recur (- new-pos 100))
       new-pos)))
 
-(add-until-in-range -131)
-(subtract-until-in-range 332)
+(comment
+  (add-until-in-range -131)
+  (subtract-until-in-range 332))
 
 (defn apply-instruction [pos {dir :dir rotation :rotation}]
   (let [new-pos (if (= dir :left) (- pos rotation) (+ pos rotation))]
@@ -60,15 +61,17 @@
       (recur (conj history (apply-instruction (last history) (first remaining-instructions)))
              (rest remaining-instructions)))))
 
-(gen-position-history 50 sample-instructions)
-(gen-position-history 50 real-instructions)
+(comment
+  (gen-position-history 50 sample-instructions)
+  (gen-position-history 50 real-instructions))
 
 (defn find-password [instructions]
   (let [history (gen-position-history 50 instructions)]
     (count (filter zero? history))))
 
-(find-password sample-instructions)
-(find-password real-instructions)
+(comment
+  (find-password sample-instructions)
+  (find-password real-instructions))
 
 (defn calc-left-crossings [pos rotation]
   (let [new-pos (- pos rotation)]
@@ -82,7 +85,8 @@
       :else
       (inc (abs (quot new-pos 100))))))
 
-(calc-left-crossings 1 23)
+(comment
+  (calc-left-crossings 1 23))
 
 (defn calc-right-crossings [pos rotation]
   (let [new-pos (+ pos rotation)]
@@ -94,9 +98,10 @@
       :else
       (quot new-pos 100))))
 
-(calc-left-crossings 5 34)
-(calc-right-crossings 50 63)
-(calc-right-crossings 3 200)
+(comment
+  (calc-left-crossings 5 34)
+  (calc-right-crossings 50 63)
+  (calc-right-crossings 3 200))
 
 (defn calc-total-zero-crossings [{instruction :instruction pos :pos}]
   (let [{dir :dir rotation :rotation} instruction]
@@ -117,25 +122,12 @@
 
 (gen-enriched-history sample-instructions)
 
-(partition 2 1 (gen-position-history 50 sample-instructions))
-
-;(defn passed-zero? [{instruction :instruction transition :transition}]
-;  (or
-;    (zero? (second transition))
-;    (and (= :left (:dir instruction)) (< (first transition) (second transition)))
-;    (and (= :right (:dir instruction)) (> (first transition) (second transition)))))
-
 (defn part2 [instructions]
   (let [enriched-history (gen-enriched-history instructions)]
     (reduce + (map calc-total-zero-crossings enriched-history))))
 
-(gen-enriched-history sample-instructions)
 
 (part2 sample-instructions)
 (part2 real-instructions)
 
-
-(partition 2 1 ["a" "b" "c" "d" "e"])
-
-(partition 2 1 (gen-position-history 50 sample-instructions))
 
