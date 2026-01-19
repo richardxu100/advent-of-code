@@ -1,7 +1,7 @@
 (ns advent-of-code-2025.day1.day1
   (:require [clojure.string :as str]))
 
-(def sample-input "./src/advent_of_code_2025/day1/sample_input.txt")
+(def sample-input "./src/advent_of_code_2025/day1/sample_input.txt.txt")
 (def real-input "./src/advent_of_code_2025/day1/input.txt")
 
 (defn parse-instruction [s]
