@@ -8,12 +8,11 @@
   {:dir (if (= \L (first s)) :left :right)
    :rotation (parse-long (apply str (rest s)))})
 
-(parse-instruction "L12")
-(parse-instruction "R1")
-
-
-(first "l12")
-(apply str (rest "l1"))
+(comment
+  (parse-instruction "L12")
+  (parse-instruction "R1")
+  (first "l12")
+  (apply str (rest "l1")))
 
 (defn parse-instructions [input]
   (->> input
@@ -49,9 +48,9 @@
       :else
       new-pos)))
 
-(reduce apply-instruction 50 sample-instructions)
-
-(apply-instruction 50 (first (parse-instructions sample-input)))
+(comment
+  (reduce apply-instruction 50 sample-instructions)
+  (apply-instruction 50 (first (parse-instructions sample-input))))
 
 (defn gen-position-history [pos instructions]
   (loop [history [pos]
