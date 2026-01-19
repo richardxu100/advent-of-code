@@ -39,3 +39,31 @@
 
   (parse-ranges sample-input)
   (parse-ranges real-input))
+
+(defn part2-valid-id? [n]
+  (loop [length 1
+         remaining-str (str n)
+         current-pattern (take 1 remaining-str)]
+    (cond
+      (empty? remaining-str)
+      true
+      (> length (quot (count (str n)) 2))
+      false
+      (= (take length remaining-str) current-pattern)
+      (recur length (apply str (drop length remaining-str)) current-pattern)
+      :else
+      (recur (inc length) (str n) (take (inc length) (str n))))))
+
+(part2-valid-id? 3)
+
+(apply str (drop 2 "123123"))
+
+(defn part2 [input]
+  (let [ranges (parse-ranges input)
+        all-ids (flatten ranges)
+        valid-ids (filter part2-valid-id? all-ids)]
+    (reduce + valid-ids)))
+
+(part2 sample-input)
+(part2 real-input)
+
