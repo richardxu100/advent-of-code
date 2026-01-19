@@ -12,9 +12,10 @@
         right (apply max (drop (inc left-index) nums))]
     (parse-long (str left right))))
 
-(.indexOf "8292" "9")
-(max-voltage "8292")
-(map parse-long "1232")
+(comment
+  (.indexOf "8292" "9")
+  (max-voltage "8292")
+  (map parse-long "1232"))
 
 (defn part1 [input]
   (->> input
@@ -23,5 +24,6 @@
        (map max-voltage)
        (reduce +)))
 
-(part1 sample-input)
-(part1 real-input)
+(comment
+  (part1 sample-input)
+  (part1 real-input))
