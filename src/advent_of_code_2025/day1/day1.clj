@@ -2,6 +2,7 @@
   (:require [clojure.string :as str]))
 
 (def sample-input "./src/advent_of_code_2025/day1/sample_input.txt")
+(def real-input "./src/advent_of_code_2025/day1/input.txt")
 
 (defn parse-instruction [s]
   {:dir (if (= \L (first s)) :left :right)
@@ -21,6 +22,7 @@
        (map parse-instruction)))
 
 (def sample-instructions (parse-instructions sample-input))
+(def real-instructions (parse-instructions real-input))
 
 (defn add-until-in-range [pos]
   (loop [new-pos pos]
@@ -60,3 +62,11 @@
              (rest remaining-instructions)))))
 
 (gen-position-history 50 sample-instructions)
+(gen-position-history 50 real-instructions)
+
+(defn find-password [instructions]
+  (let [history (gen-position-history 50 instructions)]
+    (count (filter zero? history))))
+
+(find-password sample-instructions)
+(find-password real-instructions)
