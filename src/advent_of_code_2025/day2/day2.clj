@@ -50,7 +50,7 @@
       (> length (quot (count (str n)) 2))
       false
       (= (take length remaining-str) current-pattern)
-      (recur length (apply str (drop length remaining-str)) current-pattern)
+      (recur length (drop length remaining-str) current-pattern)
       :else
       (recur (inc length) (str n) (take (inc length) (str n))))))
 
