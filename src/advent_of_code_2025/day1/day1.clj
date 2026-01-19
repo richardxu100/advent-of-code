@@ -89,7 +89,7 @@
     (cond
       (< new-pos 100)
       0
-      (= (100 new-pos))
+      (= 100 new-pos)
       1
       :else
       (quot new-pos 100))))
