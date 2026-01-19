@@ -7,7 +7,8 @@
       false
       (= (take (/ (count s) 2) s) (take-last (/ (count s) 2) s)))))
 
-(valid-id? 123124)
+(comment
+  (valid-id? 123124))
 
 (def sample-input "./src/advent_of_code_2025/day2/sample_input.txt")
 (def real-input "./src/advent_of_code_2025/day2/input.txt")
@@ -32,8 +33,9 @@
         valid-ids (filter valid-id? all-ids)]
     (reduce + valid-ids)))
 
-(part1 sample-input)
-(part1 real-input)
+(comment
+  (part1 sample-input)
+  (part1 real-input)
 
-(parse-ranges sample-input)
-(parse-ranges real-input)
+  (parse-ranges sample-input)
+  (parse-ranges real-input))
