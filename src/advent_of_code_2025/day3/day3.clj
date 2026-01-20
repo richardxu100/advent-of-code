@@ -18,15 +18,15 @@
            remaining-nums nums]
       (if (= (count current-volts) length)
         (parse-long (apply str current-volts))
-        (let [max-volt (apply max (drop-last (- length 1 (count current-volts)) remaining-nums))
+        (let [available-nums (drop-last (- length 1 (count current-volts)) remaining-nums)
+              max-volt (apply max available-nums)
               max-volt-index (.indexOf remaining-nums max-volt)]
-          (recur (conj current-volts max-volt) (drop (inc max-volt-index) remaining-nums) ))))))
+          (recur (conj current-volts max-volt) (drop (inc max-volt-index) remaining-nums)))))))
 
 (comment
   (part2-max-voltage "13746892" 4)
   (part2-max-voltage "987654321111111" 12)
   (part2-max-voltage "234234234234278" 12))
-
 
 (comment
   (.indexOf "8292" "9")
