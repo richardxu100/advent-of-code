@@ -22,9 +22,10 @@
               max-volt-index (.indexOf remaining-nums max-volt)]
           (recur (conj current-volts max-volt) (drop (inc max-volt-index) remaining-nums) ))))))
 
-(part2-max-voltage "13746892" 4)
-(part2-max-voltage "987654321111111" 12)
-(part2-max-voltage "234234234234278" 12)
+(comment
+  (part2-max-voltage "13746892" 4)
+  (part2-max-voltage "987654321111111" 12)
+  (part2-max-voltage "234234234234278" 12))
 
 
 (comment
@@ -51,6 +52,7 @@
        (map (fn [s] (part2-max-voltage s 12)))
        (reduce +)))
 
-(part2 sample-input)
-(part2 real-input)
+(comment
+  (part2 sample-input)
+  (part2 real-input))
 
