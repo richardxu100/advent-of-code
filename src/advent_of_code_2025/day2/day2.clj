@@ -40,6 +40,7 @@
   (parse-ranges sample-input)
   (parse-ranges real-input))
 
+; try to implement this with regex
 (defn part2-valid-id? [n]
   (loop [length 1
          remaining-str (str n)
