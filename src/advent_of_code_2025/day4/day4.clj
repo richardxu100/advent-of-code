@@ -10,7 +10,7 @@
 (defn toilet-paper? [s]
   (= "@" s))
 
-(defn grab-neighbors [graph coord]
+(defn- grab-neighbors [graph coord]
   (let [neighbor-indices (g/find-neighbor-indices coord)
         neighbor-indices-in-graph (filter #(g/in-graph? graph %) neighbor-indices)]
     (map #(g/get-val graph %)) neighbor-indices-in-graph))
@@ -28,10 +28,12 @@
 (comment
   (grab-indices test-graph)
   test-graph)
+
 (defn part1 [graph]
-  (count (filter #(and (toilet-paper? (g/get-val graph %))
-                       (accessible-by-forklift? graph %))
-                 (grab-indices graph))))
+  (->> (grab-indices graph)
+       (filter #(and (toilet-paper? (g/get-val graph %))
+                     (accessible-by-forklift? graph %)))
+       count))
 
 (comment
   (map #(g/get-val test-graph %) (grab-neighbors test-graph [1 3]))
