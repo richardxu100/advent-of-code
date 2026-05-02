@@ -56,19 +56,18 @@
                      ["*" "@"]])
   (assoc-in simple-graph [0 0] "o"))
 
+(defn reset-point [graph point]
+  (assoc-in graph (reverse point) '.))
+
 (defn remove-toilet-paper [graph points]
-  (loop [updated-graph graph
-         remaining-points points]
-    (if (empty? remaining-points)
-      updated-graph
-      ; need to reverse the point to update the graph properly
-      (recur (assoc-in updated-graph (reverse (first remaining-points)) ".") (rest remaining-points)))))
+  (reduce reset-point graph points))
 
 (comment
   (reverse [0 1])
   test-graph
   (assoc-in test-graph [0 1] ".")
-  (assoc-in test-graph [2 0] "."))
+  (assoc-in test-graph [2 0] ".")
+  (remove-toilet-paper test-graph [[0 1] [1 1]]))
 
 (comment
   (remove-toilet-paper simple-graph [[0 0] [1 1]]))
@@ -86,6 +85,7 @@
 (comment
   (part2 simple-graph)
   (part2 test-graph)
-  (part2 real-graph)
   (remove-toilet-paper test-graph [[2 0]])
   (remove-toilet-paper test-graph [[0 1]]))
+
+(part2 real-graph)
