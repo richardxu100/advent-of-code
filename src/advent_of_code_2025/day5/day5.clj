@@ -33,5 +33,29 @@
 
 (naive-part1 test-input)
 
-;(part1 real-input)
+(defn convert-to-range [s]
+  (let [[l r] (str/split s #"-")]
+    [(parse-long l) (parse-long r)]))
+
+(defn parse-input [input]
+  (let [lines (str/split-lines (slurp input))
+        split-index (.indexOf lines "")]
+    {:ranges (map convert-to-range (take split-index lines))
+     :ids    (map parse-long (take-last (dec (- (count lines) split-index)) lines))}))
+
+(parse-input test-input)
+
+(def has-any? (complement not-any?))
+
+(defn in-range? [[l r] id]
+  (and (<= l id) (>= r id)))
+
+(defn in-any-range? [ranges id]
+  (boolean (some #(in-range? % id) ranges)))
+
+(defn part1 [input]
+  (let [{ranges :ranges ids :ids} (parse-input input)]
+    (count (filter (partial in-any-range? ranges) ids))))
+
+(part1 real-input)
 
