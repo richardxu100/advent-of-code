@@ -57,7 +57,7 @@
   (assoc-in simple-graph [0 0] "o"))
 
 (defn reset-point [graph point]
-  (assoc-in graph (reverse point) '.))
+  (assoc-in graph (reverse point) '.'))
 
 (defn remove-toilet-paper [graph points]
   (reduce reset-point graph points))
