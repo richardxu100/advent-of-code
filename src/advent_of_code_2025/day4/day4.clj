@@ -14,7 +14,11 @@
   (map #(g/get-val graph %)) (g/find-neighbor-indices graph point))
 
 (defn accessible-by-forklift? [graph point]
-  (> 4 (count (filter toilet-paper? (map #(g/get-val graph %) (g/find-neighbor-indices graph point))))))
+  (->> (g/find-neighbor-indices graph point)
+       (map #(g/get-val graph %))
+       (filter toilet-paper?)
+       count
+       (> 4)))
 
 (defn grab-indices [graph]
   (for [x (range (count (first graph)))
