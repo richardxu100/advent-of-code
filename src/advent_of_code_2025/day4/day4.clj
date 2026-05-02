@@ -74,12 +74,14 @@
   (remove-toilet-paper simple-graph [[0 0] [1 1]]))
 
 (defn part2 [graph]
-  (loop [updated-graph graph
+  (loop [graph' graph
          forkliftable-indices (find-forkliftable-indices graph)
          removed-count 0]
     (if (empty? forkliftable-indices)
       removed-count
-      (recur (remove-toilet-paper updated-graph forkliftable-indices) (find-forkliftable-indices (remove-toilet-paper updated-graph forkliftable-indices)) (+ removed-count (count forkliftable-indices))))))
+      (recur (remove-toilet-paper graph' forkliftable-indices)
+             (find-forkliftable-indices (remove-toilet-paper graph' forkliftable-indices))
+             (+ removed-count (count forkliftable-indices))))))
 
 (comment
   (part2 simple-graph)
