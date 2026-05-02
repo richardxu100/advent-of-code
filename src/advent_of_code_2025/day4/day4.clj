@@ -56,15 +56,13 @@
                      ["*" "@"]])
   (assoc-in simple-graph [0 0] "o"))
 
-(defn reset-point [graph point]
-  (assoc-in graph (reverse point) '.'))
-
 (defn remove-toilet-paper [graph points]
-  (reduce reset-point graph points))
+  (reduce #(assoc-in %1 %2 '.') graph (map reverse points)))
 
 (comment
   (reverse [0 1])
   test-graph
+  (reduce + 5 [1 2 3])
   (assoc-in test-graph [0 1] ".")
   (assoc-in test-graph [2 0] ".")
   (remove-toilet-paper test-graph [[0 1] [1 1]]))
