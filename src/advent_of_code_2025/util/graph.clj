@@ -7,3 +7,25 @@
        str/split-lines
        (map #(str/split % #""))))
 
+(defn find-neighbor-indices
+  [[x y]]
+  [[(- x 1) (- y 1)]
+   [(- x 1) y]
+   [(- x 1) (+ y 1)]
+   [x (- y 1)]
+   [x (+ y 1)]
+   [(+ x 1) (- y 1)]
+   [(+ x 1) y]
+   [(+ x 1) (+ y 1)]])
+
+(defn is-in-graph?
+  [graph [x y]]
+  (let [graph-length (count (first graph))
+        graph-height (count graph)]
+    (and (> graph-length x) (> graph-height y) (not (neg-int? x)) (not (neg-int? y)))))
+
+(defn get-graph-value
+  "docstring"
+  [graph [x y]]
+  (nth (nth graph y) x))
+
