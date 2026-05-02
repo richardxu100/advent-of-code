@@ -35,8 +35,7 @@
 (defn find-forkliftable-indices [graph]
   (->> (grab-indices graph)
        (filter #(and (toilet-paper? (g/get-val graph %))
-                     (accessible-by-forklift? graph %)))
-       ))
+                     (accessible-by-forklift? graph %)))))
 
 
 (defn part1 [graph]
@@ -76,9 +75,10 @@
          removed-count 0]
     (if (empty? forkliftable-indices)
       removed-count
-      (recur (remove-toilet-paper graph' forkliftable-indices)
-             (find-forkliftable-indices (remove-toilet-paper graph' forkliftable-indices))
-             (+ removed-count (count forkliftable-indices))))))
+      (let [updated-graph (remove-toilet-paper graph' forkliftable-indices)]
+        (recur updated-graph
+               (find-forkliftable-indices updated-graph)
+               (+ removed-count (count forkliftable-indices)))))))
 
 (comment
   (part2 simple-graph)
