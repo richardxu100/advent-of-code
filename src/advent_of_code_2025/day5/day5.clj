@@ -1,0 +1,37 @@
+(ns advent-of-code-2025.day5.day5
+  (:require [clojure.set :as set]
+            [clojure.string :as str]))
+
+(def test-input "./src/advent_of_code_2025/day5/test_input.txt")
+(def real-input "./src/advent_of_code_2025/day5/input.txt")
+
+(defn convert-to-range [s]
+  (let [[l r] (str/split s #"-")]
+    (range (parse-long l) (inc (parse-long r)))))
+
+(convert-to-range "3-6")
+
+(defn parse-input [input]
+  (let [lines (str/split-lines (slurp input))
+        split-index (.indexOf lines "")]
+    {:ranges (map convert-to-range (take split-index lines))
+     :ids    (map parse-long (take-last (dec (- (count lines) split-index)) lines))}))
+
+(parse-input test-input)
+
+(defn destructure-practice [{r :ranges i :ids}]
+  (println r i))
+
+(destructure-practice (parse-input test-input))
+
+(concat #{1 2 3} (range 5 12))
+
+(defn naive-part1 [input]
+  (let [{ranges :ranges ids :ids} (parse-input input)
+        valid-id-set (reduce #(set/union %1 (set %2)) #{} ranges)]
+    (count (filter #(contains? valid-id-set %) ids))))
+
+(naive-part1 test-input)
+
+;(part1 real-input)
+
