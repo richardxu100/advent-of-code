@@ -11,11 +11,11 @@
   (= "@" s))
 
 (defn- grab-neighbors [graph point]
-  (map #(g/get-val graph %)) (g/find-neighbor-indices graph point))
+  (map (partial g/get-val graph)) (g/find-neighbor-indices graph point))
 
 (defn accessible-by-forklift? [graph point]
   (->> (g/find-neighbor-indices graph point)
-       (map #(g/get-val graph %))
+       (map (partial g/get-val graph))
        (filter toilet-paper?)
        count
        (> 4)))
