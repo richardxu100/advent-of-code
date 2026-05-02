@@ -5,7 +5,8 @@
   (->> input
        slurp
        str/split-lines
-       (map #(str/split % #""))))
+       (map #(str/split % #""))
+       vec))
 
 (defn in-graph?
   [graph [x y]]
