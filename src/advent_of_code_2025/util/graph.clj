@@ -7,17 +7,6 @@
        str/split-lines
        (map #(str/split % #""))))
 
-(defn find-neighbor-indices
-  [[x y]]
-  [[(- x 1) (- y 1)]
-   [(- x 1) y]
-   [(- x 1) (+ y 1)]
-   [x (- y 1)]
-   [x (+ y 1)]
-   [(+ x 1) (- y 1)]
-   [(+ x 1) y]
-   [(+ x 1) (+ y 1)]])
-
 (defn in-graph?
   [graph [x y]]
   (let [graph-length (count (first graph))
@@ -28,4 +17,20 @@
   "Returns value of the point in the graph"
   [graph [x y]]
   (nth (nth graph y) x))
+
+(defn- find-possible-neighbor-indices
+  [[x y]]
+  [[(- x 1) (- y 1)]
+   [(- x 1) y]
+   [(- x 1) (+ y 1)]
+   [x (- y 1)]
+   [x (+ y 1)]
+   [(+ x 1) (- y 1)]
+   [(+ x 1) y]
+   [(+ x 1) (+ y 1)]])
+
+(defn find-neighbor-indices
+  [graph point]
+  (let [possible-neighbor-indices (find-possible-neighbor-indices point)]
+    (filter #(in-graph? graph %) possible-neighbor-indices)))
 
