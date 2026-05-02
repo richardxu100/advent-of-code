@@ -12,13 +12,13 @@
 
 (defn grab-neighbors [graph coord]
   (let [neighbor-indices (g/find-neighbor-indices coord)
-        neighbor-indices-in-graph (filter #(g/is-in-graph? graph %) neighbor-indices)]
-    (map #(g/get-graph-value graph %)) neighbor-indices-in-graph))
+        neighbor-indices-in-graph (filter #(g/in-graph? graph %) neighbor-indices)]
+    (map #(g/get-val graph %)) neighbor-indices-in-graph))
 
 (defn accessible-by-forklift? [graph coord]
   (let [neighbor-indices (g/find-neighbor-indices coord)
-        neighbor-indices-in-graph (filter #(g/is-in-graph? graph %) neighbor-indices)]
-    (> 4 (count (filter toilet-paper? (map #(g/get-graph-value graph %) neighbor-indices-in-graph))))))
+        neighbor-indices-in-graph (filter #(g/in-graph? graph %) neighbor-indices)]
+    (> 4 (count (filter toilet-paper? (map #(g/get-val graph %) neighbor-indices-in-graph))))))
 
 (defn grab-indices [graph]
   (for [x (range (count (first graph)))
@@ -29,10 +29,12 @@
   (grab-indices test-graph)
   test-graph)
 (defn part1 [graph]
-  (count (filter #(and (toilet-paper? (g/get-graph-value graph %)) (accessible-by-forklift? graph %)) (grab-indices graph))))
+  (count (filter #(and (toilet-paper? (g/get-val graph %))
+                       (accessible-by-forklift? graph %))
+                 (grab-indices graph))))
 
 (comment
-  (map #(g/get-graph-value test-graph %) (grab-neighbors test-graph [1 3]))
+  (map #(g/get-val test-graph %) (grab-neighbors test-graph [1 3]))
   (part1 test-graph))
 
 (part1 (g/parse-graph real-input))
