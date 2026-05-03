@@ -59,3 +59,48 @@
 
 (part1 real-input)
 
+(< 2 10)
+
+(> 10 8 5)
+(> 23 5 8)
+()
+
+(defn overlaps? [r1 r2]
+  (let [[l1 r1] r1
+        [l2 r2] r2]
+    (or (>= r1 l2 l1) (>= r2 l1 l2))))
+
+(overlaps? [5 10] [12 23])
+(overlaps? [5 10] [8 23])
+(overlaps? [8 23] [5 10])
+(overlaps? [10 23] [5 10])
+
+(defn cannot-consolidate? [ranges]
+  (loop [current-range (first ranges)
+         remaining-ranges (rest ranges)
+         remaining-ranges' (rest ranges)]
+    (cond
+      (and (empty? remaining-ranges) (empty? remaining-ranges'))
+      true
+      (empty? remaining-ranges)
+      (recur (first remaining-ranges') (rest remaining-ranges') (rest remaining-ranges'))
+      (overlaps? current-range (first remaining-ranges))
+      false
+      :else
+      (recur current-range (rest remaining-ranges) remaining-ranges'))))
+
+(cannot-consolidate? [[1 3] [3 9]])
+
+(defn consolidate [ranges]
+  )
+
+(defn handle-add-range [non-overlapping-ranges range]
+  (loop [ranges (conj non-overlapping-ranges range)]
+    (if (cannot-consolidate? ranges)
+      ranges
+      (recur (consolidate ranges)))))
+
+(defn part2 [input]
+  (let [{ranges :ranges} parse-input
+        non-overlapping-ranges (reduce (partial handle-add-range []) ranges)]))
+
