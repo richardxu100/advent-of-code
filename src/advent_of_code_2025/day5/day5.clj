@@ -87,8 +87,6 @@
 (cannot-consolidate? [[1 2] [3 9]])
 
 (defn find-any-overlapping-range [range remaining-ranges]
-  (println "range" range)
-  (println "remaining-ranges" remaining-ranges)
   (loop [remaining-ranges' remaining-ranges]
     (cond
       (empty? remaining-ranges')
@@ -152,8 +150,16 @@
 (parse-ranges-part-2 test-input)
 
 (consolidate (parse-ranges-part-2 test-input))
+(consolidate (parse-ranges-part-2 real-input))
+
+(defn get-range-size [{r :range}]
+  (inc (- (second r) (first r))))
 
 (defn part2 [input]
   (let [indexed-ranges (parse-ranges-part-2 input)
-        non-overlapping-ranges (consolidate indexed-ranges)]))
+        non-overlapping-ranges (consolidate indexed-ranges)]
+    (reduce + (map get-range-size non-overlapping-ranges))))
 
+(part2 test-input)
+
+(part2 real-input)
