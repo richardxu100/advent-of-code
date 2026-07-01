@@ -58,21 +58,16 @@
 
 (part1 real-input)
 
-(< 2 10)
-
-(> 10 8 5)
-(> 23 5 8)
-()
-
 (defn overlaps? [r1 r2]
   (let [[l1 r1] r1
         [l2 r2] r2]
     (or (>= r1 l2 l1) (>= r2 l1 l2))))
 
-(overlaps? [5 10] [12 23])
-(overlaps? [5 10] [8 23])
-(overlaps? [8 23] [5 10])
-(overlaps? [10 23] [5 10])
+(comment
+  (overlaps? [5 10] [12 23])
+  (overlaps? [5 10] [8 23])
+  (overlaps? [8 23] [5 10])
+  (overlaps? [10 23] [5 10]))
 
 (defn cannot-consolidate? [ranges]
   (loop [current-range (first ranges)
@@ -89,9 +84,51 @@
       (recur current-range (rest remaining-ranges) remaining-ranges'))))
 
 (cannot-consolidate? [[1 3] [3 9]])
+(cannot-consolidate? [[1 2] [3 9]])
 
-(defn consolidate [ranges]
-  )
+(defn find-any-overlapping-range [range remaining-ranges]
+  (loop [remaining-ranges' remaining-ranges]
+    (cond
+      (empty? remaining-ranges')
+      nil
+      (overlaps? (:range range) (:range (first remaining-ranges')))
+      (first remaining-ranges')
+      :else
+      (recur (rest remaining-ranges')))))
+
+(defn merge-range [indexed-r1 indexed-r2]
+  (let [r1 (:range indexed-r1)
+        r2 (:range indexed-r2)
+        min-x (min (first r1) (first r2))
+        max-y (max (second r1) (second r2))]
+    [min-x max-y]))
+
+(merge-range {:range [10 23]} {:range [16 29]})
+
+(defn remove-id [ranges id]
+  (filter #(not (= (:id %) id)) ranges))
+
+(remove-id [{:id 5 :range [10 23]} {:id 12 :range [10 25]}] 5)
+
+(defn consolidate [indexed-ranges]
+  (loop [current-range (first indexed-ranges)
+         remaining-ranges (rest indexed-ranges)
+         consolidated-ranges []]
+    (cond
+      (empty? remaining-ranges)
+      (if (empty? current-range)
+        consolidated-ranges
+        (cons (:range current-range) consolidated-ranges))
+      :else
+      (let [overlapping-range (find-any-overlapping-range current-range remaining-ranges)]
+        (if (nil? overlapping-range)
+          (recur (first remaining-ranges) (rest remaining-ranges) (cons (:range current-range) consolidated-ranges))
+          (let [consolidated-range (merge-range current-range overlapping-range)
+                remaining-ranges' (remove-id remaining-ranges (:id overlapping-range))]
+            (recur (first remaining-ranges') (rest remaining-ranges') (cons consolidated-range consolidated-ranges))))))))
+
+;; probably need to use vectors. Also use debugger mode. And figure out how to create functions, rename things, other lsp things
+
 
 (defn handle-add-range [non-overlapping-ranges range]
   (loop [ranges (conj non-overlapping-ranges range)]
@@ -99,7 +136,22 @@
       ranges
       (recur (consolidate ranges)))))
 
+
+(defn convert-to-indexed-range [index s]
+  (let [[l r] (str/split s #"-")]
+    {:id index :range [(parse-long l) (parse-long r)]}))
+
+
+(defn parse-ranges-part-2 [input]
+  (let [lines (str/split-lines (slurp input))
+        split-index (.indexOf lines "")]
+    (map-indexed convert-to-indexed-range (take split-index lines))))
+
+(parse-ranges-part-2 test-input)
+
+(consolidate (parse-ranges-part-2 test-input))
+
 (defn part2 [input]
-  (let [{ranges :ranges} parse-input
-        non-overlapping-ranges (reduce (partial handle-add-range []) ranges)]))
+  (let [indexed-ranges (parse-ranges-part-2 input)
+        non-overlapping-ranges (consolidate indexed-ranges)]))
 
