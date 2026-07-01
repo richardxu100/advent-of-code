@@ -87,6 +87,8 @@
 (cannot-consolidate? [[1 2] [3 9]])
 
 (defn find-any-overlapping-range [range remaining-ranges]
+  (println "range" range)
+  (println "remaining-ranges" remaining-ranges)
   (loop [remaining-ranges' remaining-ranges]
     (cond
       (empty? remaining-ranges')
@@ -101,7 +103,7 @@
         r2 (:range indexed-r2)
         min-x (min (first r1) (first r2))
         max-y (max (second r1) (second r2))]
-    [min-x max-y]))
+    {:range [min-x max-y] :id (:id indexed-r1)}))
 
 (merge-range {:range [10 23]} {:range [16 29]})
 
@@ -118,14 +120,14 @@
       (empty? remaining-ranges)
       (if (empty? current-range)
         consolidated-ranges
-        (cons (:range current-range) consolidated-ranges))
+        (cons current-range consolidated-ranges))
       :else
       (let [overlapping-range (find-any-overlapping-range current-range remaining-ranges)]
         (if (nil? overlapping-range)
-          (recur (first remaining-ranges) (rest remaining-ranges) (cons (:range current-range) consolidated-ranges))
+          (recur (first remaining-ranges) (rest remaining-ranges) (cons current-range consolidated-ranges))
           (let [consolidated-range (merge-range current-range overlapping-range)
                 remaining-ranges' (remove-id remaining-ranges (:id overlapping-range))]
-            (recur (first remaining-ranges') (rest remaining-ranges') (cons consolidated-range consolidated-ranges))))))))
+            (recur consolidated-range remaining-ranges' consolidated-ranges)))))))
 
 ;; probably need to use vectors. Also use debugger mode. And figure out how to create functions, rename things, other lsp things
 
