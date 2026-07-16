@@ -28,6 +28,8 @@
 
 (part1 real-input)
 
+;; Part 2
+
 (defn overlaps? [r1 r2]
   (let [[l1 r1] r1
         [l2 r2] r2]
@@ -39,49 +41,37 @@
   (overlaps? [8 23] [5 10])
   (overlaps? [10 23] [5 10]))
 
+(defn merge-range [r1 r2]
+  [(min (first r1) (first r2))
+    (max (second r1) (second r2))])
 
-(defn simpler-merge-range [r1 r2]
-  (let [min-x (min (first r1) (first r2))
-        max-y (max (second r1) (second r2))]
-    [min-x max-y]))
-
-
-(defn- sort-ranges [ranges]
-  (sort-by first ranges))
-
-(sort-ranges [{:range [5 10]} {:range [2 41]} {:range [7 21]}])
-
-;; can remove the indexed ranges
-(defn better-consolidate
+(defn consolidate
   "Merge ranges until there are no overlaps"
   [ranges]
-  (let [sorted-ranges (sort-ranges ranges)]
+  (let [sorted-ranges (sort-by first ranges)]
     (loop [remaining-ranges sorted-ranges
            consolidated-ranges []]
       (cond
-        (empty? remaining-ranges)
-        consolidated-ranges
         (= 1 (count remaining-ranges))
         (cons (first remaining-ranges) consolidated-ranges)
         :else
         (let [first-range (first remaining-ranges)
               second-range (second remaining-ranges)]
-          (print remaining-ranges)
           (if (overlaps? first-range second-range)
-            (recur (cons (simpler-merge-range first-range second-range) (drop 2 remaining-ranges)) consolidated-ranges)
+            (recur (cons (merge-range first-range second-range) (drop 2 remaining-ranges)) consolidated-ranges)
             (recur (rest remaining-ranges) (cons first-range consolidated-ranges))))))))
 
+(consolidate (:ranges (parse-input test-input)))
 
-(better-consolidate (map :ranges (parse-input real-input)))
-
+(parse-input test-input)
 
 (defn simpler-get-range-size [r]
   (print r)
   (inc (- (second r) (first r))))
 
 (defn part2 [input]
-  (let [ranges (map :ranges (parse-input input))
-        non-overlapping-ranges (better-consolidate ranges)]
+  (let [ranges (:ranges (parse-input input))
+        non-overlapping-ranges (consolidate ranges)]
     (reduce + (map simpler-get-range-size non-overlapping-ranges))))
 
 (part2 test-input)
