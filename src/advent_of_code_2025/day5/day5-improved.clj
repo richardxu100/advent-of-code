@@ -58,7 +58,6 @@
 (defn consolidate
   [ranges]
   (let [sorted-ranges (sort-by first ranges)]
-    (print sorted-ranges)
     (reduce (fn [result range]
               (if (empty? result)
                 [range]
@@ -66,12 +65,11 @@
                   (conj (vec (drop-last result)) (merge-range (last result) range)) ;; I need to convert drop-last to vec, as conj on a () list adds items to the front, not the end
                   (conj result range)))) [] sorted-ranges)))
 
-(sort-consolidate (:ranges (parse-input test-input)))
-
-(consolidate (:ranges (parse-input test-input)))                                            
-(consolidate (:ranges (parse-input real-input)))                                            
-
-(parse-input test-input)
+(comment
+  (sort-consolidate (:ranges (parse-input test-input)))
+  (consolidate sort-consolidate)
+  (consolidate (:ranges (parse-input real-input)))
+  (parse-input test-input))
 
 (defn get-range-size [r]
   (print r)
