@@ -40,26 +40,22 @@
   (overlaps? [10 23] [5 10]))
 
 
-
 (defn simpler-merge-range [r1 r2]
   (let [min-x (min (first r1) (first r2))
         max-y (max (second r1) (second r2))]
     [min-x max-y]))
 
 
-
-
-
-(defn- sort-ranges [indexed-ranges]
-  (sort-by first (map #(:range %) indexed-ranges)))
+(defn- sort-ranges [ranges]
+  (sort-by first ranges))
 
 (sort-ranges [{:range [5 10]} {:range [2 41]} {:range [7 21]}])
 
 ;; can remove the indexed ranges
 (defn better-consolidate
   "Merge ranges until there are no overlaps"
-  [indexed-ranges]
-  (let [sorted-ranges (sort-ranges indexed-ranges)]
+  [ranges]
+  (let [sorted-ranges (sort-ranges ranges)]
     (loop [remaining-ranges sorted-ranges
            consolidated-ranges []]
       (cond
@@ -75,32 +71,17 @@
             (recur (cons (simpler-merge-range first-range second-range) (drop 2 remaining-ranges)) consolidated-ranges)
             (recur (rest remaining-ranges) (cons first-range consolidated-ranges))))))))
 
-(defn convert-to-indexed-range [index s]
-  (let [[l r] (str/split s #"-")]
-    {:id index :range [(parse-long l) (parse-long r)]}))
 
-(defn parse-ranges-part-2 [input]
-  (let [lines (str/split-lines (slurp input))
-        split-index (.indexOf lines "")]
-    (map-indexed convert-to-indexed-range (take split-index lines))))
+(better-consolidate (map :ranges (parse-input real-input)))
 
-(comment
-  (parse-ranges-part-2 test-input)
-  (better-consolidate (parse-ranges-part-2 test-input))
-  (consolidate (parse-ranges-part-2 real-input))
-
-  (part2 real-input))
-
-(better-consolidate (parse-ranges-part-2 real-input))
-(parse-ranges-part-2 test-input)
 
 (defn simpler-get-range-size [r]
   (print r)
   (inc (- (second r) (first r))))
 
 (defn part2 [input]
-  (let [indexed-ranges (parse-ranges-part-2 input)
-        non-overlapping-ranges (better-consolidate indexed-ranges)]
+  (let [ranges (map :ranges (parse-input input))
+        non-overlapping-ranges (better-consolidate ranges)]
     (reduce + (map simpler-get-range-size non-overlapping-ranges))))
 
 (part2 test-input)
