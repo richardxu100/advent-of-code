@@ -35,12 +35,6 @@
         [l2 r2] r2]
     (or (>= r1 l2 l1) (>= r2 l1 l2))))
 
-(comment
-  (overlaps? [5 10] [12 23])
-  (overlaps? [5 10] [8 23])
-  (overlaps? [8 23] [5 10])
-  (overlaps? [10 23] [5 10]))
-
 (defn merge-range [r1 r2]
   [(min (first r1) (first r2))
     (max (second r1) (second r2))])
@@ -61,18 +55,33 @@
             (recur (cons (merge-range first-range second-range) (drop 2 remaining-ranges)) consolidated-ranges)
             (recur (rest remaining-ranges) (cons first-range consolidated-ranges))))))))
 
+;; don't rely on vec here
+(defn reduce-consolidate
+  [ranges]
+  (let [sorted-ranges (sort-by first ranges)]
+    (print sorted-ranges)
+    (reduce (fn [result range]
+              (if (empty? result)
+                [range]
+                (if (overlaps? (last result) range)
+                  (conj (vec (drop-last result)) (merge-range (last result) range))
+                  (conj result range)))) [] sorted-ranges)))
+
 (consolidate (:ranges (parse-input test-input)))
+
+(reduce-consolidate (:ranges (parse-input test-input)))                                            
+(reduce-consolidate (:ranges (parse-input real-input)))                                            
 
 (parse-input test-input)
 
-(defn simpler-get-range-size [r]
+(defn get-range-size [r]
   (print r)
   (inc (- (second r) (first r))))
 
 (defn part2 [input]
   (let [ranges (:ranges (parse-input input))
-        non-overlapping-ranges (consolidate ranges)]
-    (reduce + (map simpler-get-range-size non-overlapping-ranges))))
+        non-overlapping-ranges (reduce-consolidate ranges)]
+    (reduce + (map get-range-size non-overlapping-ranges))))
 
 (part2 test-input)
 (part2 real-input)
