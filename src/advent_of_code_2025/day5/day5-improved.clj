@@ -39,7 +39,7 @@
   [(min (first r1) (first r2))
     (max (second r1) (second r2))])
 
-(defn consolidate
+(defn sort-consolidate
   "Merge ranges until there are no overlaps"
   [ranges]
   (let [sorted-ranges (sort-by first ranges)]
@@ -55,8 +55,7 @@
             (recur (cons (merge-range first-range second-range) (drop 2 remaining-ranges)) consolidated-ranges)
             (recur (rest remaining-ranges) (cons first-range consolidated-ranges))))))))
 
-;; don't rely on vec here
-(defn reduce-consolidate
+(defn consolidate
   [ranges]
   (let [sorted-ranges (sort-by first ranges)]
     (print sorted-ranges)
@@ -64,13 +63,13 @@
               (if (empty? result)
                 [range]
                 (if (overlaps? (last result) range)
-                  (conj (vec (drop-last result)) (merge-range (last result) range))
+                  (conj (vec (drop-last result)) (merge-range (last result) range)) ;; I need to convert drop-last to vec, as conj on a () list adds items to the front, not the end
                   (conj result range)))) [] sorted-ranges)))
 
-(consolidate (:ranges (parse-input test-input)))
+(sort-consolidate (:ranges (parse-input test-input)))
 
-(reduce-consolidate (:ranges (parse-input test-input)))                                            
-(reduce-consolidate (:ranges (parse-input real-input)))                                            
+(consolidate (:ranges (parse-input test-input)))                                            
+(consolidate (:ranges (parse-input real-input)))                                            
 
 (parse-input test-input)
 
@@ -80,7 +79,7 @@
 
 (defn part2 [input]
   (let [ranges (:ranges (parse-input input))
-        non-overlapping-ranges (reduce-consolidate ranges)]
+        non-overlapping-ranges (consolidate ranges)]
     (reduce + (map get-range-size non-overlapping-ranges))))
 
 (part2 test-input)
