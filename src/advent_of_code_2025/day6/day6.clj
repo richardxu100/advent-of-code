@@ -50,13 +50,6 @@
 (def ex-line "*   +   *   +  ")
 (def ex-line2 "*  ")
 
-(defn find-slice-length [line]
-  (loop [length-to-next-problem 1
-         line' (rest line)]
-    (if (or (not= \space (first line')) (empty? line'))
-      length-to-next-problem
-      (recur (inc length-to-next-problem) (rest line')))))
-
 (defn next-num [line]
   (println "line: " line)
   (-> line
@@ -73,8 +66,9 @@
 
 (num-digits 3212)
 
-(defn fix-find-slice-length [lines]
-  (println  "lines" lines)
+(defn find-slice-length
+  "Equals the number of digits of the next largest number"
+  [lines]
   (->> lines
        drop-last
        (map next-num)
@@ -82,10 +76,7 @@
        (apply max)))
 
 (comment
-  (find-slice-length ex-line)
-  (find-slice-length ex-line2)
-
-  (fix-find-slice-length ex-line))
+  (find-slice-length ex-line))
 
 (second ex-line)
 
@@ -95,11 +86,39 @@
            problems []]
       (if (empty? (first lines'))
         problems
-        (let [slice-length (fix-find-slice-length lines')]
+        (let [slice-length (find-slice-length lines')]
           (recur (map #(drop (inc slice-length) %) lines') (conj problems (map #(take slice-length %) lines'))))))))
 
-(parse-problems-part2 test-input)
+(def ex-problem
+  (first (parse-problems-part2 test-input)))
 
-(fix-find-slice-length (str/split-lines (slurp test-input)))
+(->> ex-problem
+     drop-last
+     (apply map str)
+     (map str/trim)
+     (map parse-long))
+
+(find-slice-length (str/split-lines (slurp test-input)))
 
 (apply max '(3 2 1))
+
+(defn process-problem-part2 [problem]
+  (let [args (->> problem
+                  drop-last
+                  (apply map str)
+                  (map str/trim)
+                  (map parse-long))
+        operation (first (last problem))]
+    (case operation
+      \+
+      (apply + args)
+      \*
+      (apply * args))))
+
+(process-problem-part2 ex-problem)
+
+(defn part2 [input]
+  (let [problems (parse-problems-part2 input)]
+    (reduce + (map process-problem-part2 problems))))
+
+(part2 input)
