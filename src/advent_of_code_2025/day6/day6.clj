@@ -4,10 +4,6 @@
 (def input "./src/advent_of_code_2025/day6/input.txt")
 (def test-input "./src/advent_of_code_2025/day6/test_input.txt")
 
-(defn filter-blanks [input]
-  (filter seq input))
-
-;; why can't i inline this in the threadding macro?
 (defn separate [input]
   (let [s (str/split input #" ")]
     (filter seq s)))
@@ -17,12 +13,7 @@
        slurp
        str/split-lines
        (map separate)
-       (apply mapv vector)))
-
-(take 4 (parse-problems input))
-
-(mapv vector
-      [:a :b] [1 2] [:yo :no])
+       (apply mapv vector))) ;; this transposes the vector
 
 (defn process-problem [problem]
   (let [args (map parse-long (drop-last problem))
@@ -42,13 +33,7 @@
 
 (part1 input)
 
-(-> test-input
-    slurp
-    str/split-lines
-    )
-
 (def ex-line "*   +   *   +  ")
-(def ex-line2 "*  ")
 
 (defn next-num [line]
   (println "line: " line)
@@ -76,9 +61,8 @@
        (apply max)))
 
 (comment
-  (find-slice-length ex-line))
-
-(second ex-line)
+  (find-slice-length ex-line)
+  (second ex-line))
 
 (defn parse-problems-part2 [input]
   (let [lines (str/split-lines (slurp input))]
@@ -98,9 +82,9 @@
      (map str/trim)
      (map parse-long))
 
-(find-slice-length (str/split-lines (slurp test-input)))
-
-(apply max '(3 2 1))
+(comment
+  (find-slice-length (str/split-lines (slurp test-input)))
+  (apply max '(3 2 1)))
 
 (defn process-problem-part2 [problem]
   (let [args (->> problem
