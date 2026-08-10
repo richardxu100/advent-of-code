@@ -43,3 +43,21 @@ ex-row
 
 (mapv vector
       [:a :b] [1 2] [:yo :no])
+
+(defn process-problem [problem]
+  (let [args (map parse-long (drop-last problem))
+        operation (last problem)]
+    (case operation
+      "+"
+      (apply + args)
+      "*"
+      (apply * args))
+    ))
+
+(process-problem ["2" "3" "5" "+"])
+
+(defn part1 [input]
+  (let [problems (parse-problems input)]
+    (reduce + (map process-problem problems))))
+
+(part1 input)
