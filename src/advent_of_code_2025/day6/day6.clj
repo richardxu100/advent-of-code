@@ -71,27 +71,25 @@
       (if (empty? (first lines'))
         problems
         (let [slice-length (find-slice-length lines')]
-          (recur (map #(drop (inc slice-length) %) lines') (conj problems (map #(take slice-length %) lines'))))))))
+          (recur (map #(drop (inc slice-length) %) lines')
+                 (conj problems (map #(take slice-length %) lines'))))))))
 
 (def ex-problem
   (first (parse-problems-part2 test-input)))
 
-(->> ex-problem
-     drop-last
-     (apply map str)
-     (map str/trim)
-     (map parse-long))
+(defn parce-args-part2 [problem]
+  (->> problem
+       drop-last
+       (apply map str)
+       (map str/trim)
+       (map parse-long)))
 
 (comment
   (find-slice-length (str/split-lines (slurp test-input)))
   (apply max '(3 2 1)))
 
 (defn process-problem-part2 [problem]
-  (let [args (->> problem
-                  drop-last
-                  (apply map str)
-                  (map str/trim)
-                  (map parse-long))
+  (let [args (parce-args-part2 problem)
         operation (first (last problem))]
     (case operation
       \+
