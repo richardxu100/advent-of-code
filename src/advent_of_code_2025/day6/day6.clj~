@@ -1,0 +1,10 @@
+(ns advent-of-code-2025.day6.day6 
+  (:require [clojure.string :as str]))
+
+
+(-> "./src/advent_of_code_2025/day6/input.txt"
+    (slurp)
+    (str/split #"\n")
+    second
+    )
+
