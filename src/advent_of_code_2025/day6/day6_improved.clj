@@ -37,7 +37,7 @@
                    slurp
                    str/split-lines
                    (map #(re-seq #"\d+|\*|\+" %)))
-        operators (mapv {"+" + , "*" *} (last lines))
+        operators (mapv {"+" + , "*" *} (last lines)) ; this is interesting. Applying a map to a string
         numbers (vertical-numbers input)]
     (calculate operators numbers)))
 
