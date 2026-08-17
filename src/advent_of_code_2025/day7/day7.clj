@@ -15,12 +15,14 @@
 (defn add-beams [board indices]
   (reduce #(assoc-in %1 %2 "|") board (map reverse indices))) ;; okay to explain this, we're passing the board and indices to reduce, which is why we have %1 and %2 here
 
+(defn find-indices [coll pred]
+  (->> coll
+       (map-indexed vector)
+       (filter #(pred (second %)))
+       (map first)))
+
 (defn first-turn [board]
-  (let [entrance-index (->> (first board)
-                        (map-indexed vector)
-                        (filter #(entrance? (second %)))
-                        first
-                        first)]
+  (let [entrance-index (first (find-indices (first board) entrance?))]
     (add-beams board [[entrance-index 1]])))
 
 (first-turn test-graph)
@@ -32,10 +34,7 @@
 
 (defn update-next-row [board index]
   (let [current-row (nth board index)
-        beam-indices (->> current-row
-                          (map-indexed vector)
-                          (filter #(beam? (second %)))
-                          (map first))
+        beam-indices (find-indices current-row beam?)
         beam-coords (map #(vector % index) beam-indices)]
     (reduce extend-beam-to-next-row board beam-coords))) ; I like using reduce to apply recursive updates
 
@@ -56,10 +55,7 @@
 (game test-input)
 
 (defn num-splits [idx board]
-  (let [splitter-indices (->> (nth board idx)
-                              (map-indexed vector)
-                              (filter #(splitter? (second %)))
-                              (map first))]
+  (let [splitter-indices (find-indices (nth board idx) splitter?)]
     (->> splitter-indices
          (filter #(beam? (g/get-val board [% (dec idx)]))) ;; see if a beam is directly above the splitter
          count)))
