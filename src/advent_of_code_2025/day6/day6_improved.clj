@@ -1,7 +1,7 @@
 (ns advent-of-code-2025.day6.day6-improved 
   (:require
     [clojure.string :as str]
-    [advent-of-code.utils.utils :as utils]))
+    [advent-of-code-2025.util.graph :as graph]))
 
 (def input "./src/advent_of_code_2025/day6/input.txt")
 (def test-input "./src/advent_of_code_2025/day6/test_input.txt")
@@ -11,7 +11,7 @@
        slurp
        (str/split-lines)
        butlast                      ; drop last line, with the operators
-       utils/transpose
+       graph/transpose
        (map (comp parse-long str/trim str/join))
        (partition-by nil?)
        (take-nth 2))); this takes every other element in the sequence
@@ -29,7 +29,7 @@
      (str/split-lines)
      (map #(re-seq #"\d+|\*|\+" %)) ; re-seq is a way to apply a regexp on a sequence. I'm parsing the digits and operators
      last
-     (mapv {"+" + , "*" *})
+     (mapv {"+" + , "*n" *})
      )
 
 (defn solve [input]

@@ -72,7 +72,6 @@
   (parse-input test-input))
 
 (defn get-range-size [r]
-  (print r)
   (inc (- (second r) (first r))))
 
 (defn part2 [input]

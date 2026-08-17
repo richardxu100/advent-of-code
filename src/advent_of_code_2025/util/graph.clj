@@ -8,7 +8,7 @@
        (map #(str/split % #""))
        vec))
 
-(defn in-graph?
+(defn- in-graph?
   [graph [x y]]
   (let [graph-length (count (first graph))
         graph-height (count graph)]
@@ -34,4 +34,7 @@
   [graph point]
   (let [possible-neighbor-indices (find-possible-neighbor-indices point)]
     (filter #(in-graph? graph %) possible-neighbor-indices)))
+
+(defn transpose [graph]
+  (apply mapv vector graph))
 
