@@ -2,10 +2,6 @@
   (:require
     [advent-of-code-2025.util.graph :as g]))
 
-;; Solve this like a game loop
-;; Keep going until reach the end
-;; Each term, refresh the board
-
 (def test-input "./src/advent_of_code_2025/day7/test_input.txt")
 (def input "./src/advent_of_code_2025/day7/input.txt")
 
@@ -41,13 +37,11 @@
                           (filter #(beam? (second %)))
                           (map first))
         beam-coords (map #(vector % index) beam-indices)]
-    (reduce extend-beam-to-next-row board beam-coords)))
+    (reduce extend-beam-to-next-row board beam-coords))) ; I like using reduce to apply recursive updates
 
-(map #(vector % 4) [3 1 5 2])
-
-(extend-beam-to-next-row (extend-beam-to-next-row (first-turn test-graph) [7 1]) [6 2])
-
-(update-next-row (first-turn test-graph) 1)
+(comment
+  (map #(vector % 4) [3 1 5 2])
+  (update-next-row (first-turn test-graph) 1))
 
 (defn update [board index]
   (condp = index
@@ -57,17 +51,9 @@
 
 (defn game [input]
   (let [board (g/parse-graph input)]
-    (loop [board' board
-           turn 0]
-      (if (= turn (dec (count board)))
-        board'
-        (recur (update board' turn) (inc turn))))))
+    (reduce update board (range (count board))))) ; this is nicer than the loop recur of before!
 
 (game test-input)
-
-(defn surrounded-by-beams? [row index]
-  (and (beam? (nth row (dec index))) (beam? (nth row (inc index)))))
-
 
 (defn num-splits [idx board]
   (let [splitter-indices (->> (nth board idx)
@@ -75,27 +61,19 @@
                               (filter #(splitter? (second %)))
                               (map first))]
     (->> splitter-indices
-         (filter #(beam? (g/get-val board [% (dec idx)]))) ; not sure this is correct
+         (filter #(beam? (g/get-val board [% (dec idx)]))) ;; see if a beam is directly above the splitter
          count)))
-
-(defn calc-num-splits [board]
-  (reduce + (for [idx (range (count board))]
-              (num-splits idx board))))
 
 (defn part1 [input]
   (let [result (game input)]
-    (calc-num-splits result)))
+    (reduce + (for [idx (range (count result))]
+              (num-splits idx result)))))
 
 (part1 test-input)
 
-;; run this in debug mode. There's a small bug somewhere
-
-(nth test-graph 0)
-
-(num-splits 15 test-graph)
-
-(count test-graph)
-
-(count (game test-input))
+(comment
+  (num-splits 15 test-graph)
+  (count test-graph)
+  (count (game test-input)))
 
 (part1 input)
