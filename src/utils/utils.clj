@@ -12,6 +12,3 @@
       (reverse res))))
 
 (re-pos #"\d+" "12..87....")
-
-(defn transpose [graph]
-  (apply mapv vector graph))

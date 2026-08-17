@@ -36,7 +36,6 @@
 (def ex-line "*   +   *   +  ")
 
 (defn next-num [line]
-  (println "line: " line)
   (-> line
       str/join
       (str/split #" ")
@@ -104,3 +103,5 @@
     (reduce + (map process-problem-part2 problems))))
 
 (part2 input)
+
+(parse-problems-part2 test-input)
