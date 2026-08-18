@@ -97,6 +97,7 @@
             (recur (rest nodes) (inc num-paths))
             (recur (into (rest nodes) (child-paths current-node graph)) num-paths)))))))
 
+;; I need to memoize a result if a place has been visited
 (calc-paths test-graph)
 
 (g/get-val test-graph [14 15])
@@ -107,3 +108,32 @@
     (calc-paths graph)))
 
 (part2 test-input)
+
+(defn terminal-position? [graph [_ y]]
+  (= (dec (count graph)) y))
+
+(defn dl [[x y]]
+  [(dec x) y])
+
+(defn dr [[x y]]
+  [(inc x) y])
+
+(def memoize-calc-paths-node
+  "Returns the number of paths for a node to the destination"
+  (memoize (fn [graph node]
+             (if (terminal-position? graph node)
+               1
+               (if (splitter? (g/get-val graph [(first node) (inc (second node))]))
+                 (+ (memoize-calc-paths-node graph (dl node)) (memoize-calc-paths-node graph (dr node)))
+                 (memoize-calc-paths-node graph [(first node) (inc (second node))]))))))
+
+
+(defn faster-part2 [input]
+  (let [graph (g/parse-graph input)
+        entrance-index (first (find-indices (first graph) entrance?))
+        entrance-node [entrance-index 0]]
+    (memoize-calc-paths-node graph entrance-node)))
+
+(faster-part2 test-input)
+
+(faster-part2 input)
