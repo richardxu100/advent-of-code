@@ -97,17 +97,16 @@
             (recur (rest nodes) (inc num-paths))
             (recur (into (rest nodes) (child-paths current-node graph)) num-paths)))))))
 
-;; I need to memoize a result if a place has been visited
 (calc-paths test-graph)
 
 (g/get-val test-graph [14 15])
 (count test-graph)
 
-(defn part2 [input]
+(defn naive-part2 [input]
   (let [graph (g/parse-graph input)]
     (calc-paths graph)))
 
-(part2 test-input)
+(naive-part2 test-input)
 
 (defn terminal-position? [graph [_ y]]
   (= (dec (count graph)) y))
@@ -140,3 +139,26 @@
 (faster-part2 test-input)
 
 (faster-part2 input)
+
+(defn find-entrance-node [graph]
+  (let [entrance-index (first (find-indices (first graph) entrance?))]
+    [entrance-index 0]))
+
+;; This version handles the initial case the entrance node
+(def m-recur-part2
+  (memoize (fn
+             ([graph] (m-recur-part2 graph (find-entrance-node graph)))
+             ([graph node]
+              (if (terminal-position? graph node)
+                1
+                (if (splitter? (g/get-val graph (d node)))
+                  (+ (m-recur-part2 graph (dl node)) (m-recur-part2 graph (dr node))) ; in a way, figuring out the total number of paths is like doing a fibonacci. Add 1 if you reach the terminal
+                  (m-recur-part2 graph (d node))))))))
+
+(m-recur-part2 (g/parse-graph input))
+
+(defn clean-part2 [input]
+  (m-recur-part2 (g/parse-graph input)))
+
+(clean-part2 input)
+
