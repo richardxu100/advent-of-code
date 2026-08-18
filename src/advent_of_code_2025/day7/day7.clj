@@ -73,3 +73,37 @@
   (count (game test-input)))
 
 (part1 input)
+
+;;; Part 2
+;; I think I should do a search algorithm, that adds to a master list of possible routes
+
+(defn child-paths [[x y] graph]
+  (if (entrance? (g/get-val graph [x y]))
+    [[x 1]]
+    (if (splitter? (g/get-val graph [x (inc y)]))
+      [[(dec x) (inc y)] [(inc x) (inc y)]]
+      [[x (inc y)]])))
+
+;; I'm not going to de-duplicate the paths. I'm not sure if that's necessary yet
+(defn calc-paths [graph]
+  (let [entrance-index (first (find-indices (first graph) entrance?))
+        entrance-node [entrance-index 0]]
+    (loop [nodes [entrance-node]
+           num-paths 0]
+      (if (empty? nodes)
+        num-paths
+        (let [current-node (first nodes)]
+          (if (= (second current-node) (dec (count graph))) ; if reached terminal area of graph
+            (recur (rest nodes) (inc num-paths))
+            (recur (into (rest nodes) (child-paths current-node graph)) num-paths)))))))
+
+(calc-paths test-graph)
+
+(g/get-val test-graph [14 15])
+(count test-graph)
+
+(defn part2 [input]
+  (let [graph (g/parse-graph input)]
+    (calc-paths graph)))
+
+(part2 test-input)
