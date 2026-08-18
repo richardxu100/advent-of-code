@@ -118,21 +118,24 @@
 (defn dr [[x y]]
   [(inc x) y])
 
-(def memoize-calc-paths-node
+(defn d [[x y]]
+  [x (inc y)])
+
+(def m-calc-paths
   "Returns the number of paths for a node to the destination"
   (memoize (fn [graph node]
              (if (terminal-position? graph node)
                1
-               (if (splitter? (g/get-val graph [(first node) (inc (second node))]))
-                 (+ (memoize-calc-paths-node graph (dl node)) (memoize-calc-paths-node graph (dr node)))
-                 (memoize-calc-paths-node graph [(first node) (inc (second node))]))))))
+               (if (splitter? (g/get-val graph (d node)))
+                 (+ (m-calc-paths graph (dl node)) (m-calc-paths graph (dr node))) ; in a way, figuring out the total number of paths is like doing a fibonacci. Add 1 if you reach the terminal
+                 (m-calc-paths graph (d node)))))))
 
 
 (defn faster-part2 [input]
   (let [graph (g/parse-graph input)
         entrance-index (first (find-indices (first graph) entrance?))
         entrance-node [entrance-index 0]]
-    (memoize-calc-paths-node graph entrance-node)))
+    (m-calc-paths graph entrance-node)))
 
 (faster-part2 test-input)
 
