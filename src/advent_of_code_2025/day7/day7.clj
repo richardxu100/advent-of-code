@@ -18,7 +18,7 @@
 (defn dr [[x y]]
   [(inc x) (inc y)])
 
-(defn d [[x y]]
+(defn down [[x y]]
   [x (inc y)])
 
 (defn add-beams [board indices]
@@ -37,10 +37,9 @@
 (first-turn test-graph)
 
 (defn extend-beam-to-next-row [board [x y :as coord]]
-  (println coord)
-  (if (splitter? (g/get-val board (d coord)))
+  (if (splitter? (g/get-val board (down coord)))
     (add-beams board [(dl coord) (dr coord)])
-    (add-beams board [(d coord)])))
+    (add-beams board [(down coord)])))
 
 (defn update-next-row [board index]
   (let [current-row (nth board index)
@@ -52,7 +51,7 @@
   (map #(vector % 4) [3 1 5 2])
   (update-next-row (first-turn test-graph) 1))
 
-(defn update [board index]
+(defn play-round [board index]
   (condp = index
     0 (first-turn board)
     (dec (count board)) board
@@ -60,7 +59,7 @@
 
 (defn game [input]
   (let [board (g/parse-graph input)]
-    (reduce update board (range (count board))))) ; this is nicer than the loop recur of before!
+    (reduce play-round board (range (count board))))) ; this is nicer than the loop recur of before!
 
 (game test-input)
 
@@ -127,9 +126,9 @@
   (memoize (fn [graph node]
              (if (terminal-position? graph node)
                1
-               (if (splitter? (g/get-val graph (d node)))
+               (if (splitter? (g/get-val graph (down node)))
                  (+ (m-calc-paths graph (dl node)) (m-calc-paths graph (dr node))) ; in a way, figuring out the total number of paths is like doing a fibonacci. Add 1 if you reach the terminal
-                 (m-calc-paths graph (d node)))))))
+                 (m-calc-paths graph (down node)))))))
 
 
 (defn faster-part2 [input]
@@ -153,9 +152,9 @@
              ([graph node]
               (if (terminal-position? graph node)
                 1
-                (if (splitter? (g/get-val graph (d node)))
+                (if (splitter? (g/get-val graph (down node)))
                   (+ (m-recur-part2 graph (dl node)) (m-recur-part2 graph (dr node))) ; in a way, figuring out the total number of paths is like doing a fibonacci. Add 1 if you reach the terminal
-                  (m-recur-part2 graph (d node))))))))
+                  (m-recur-part2 graph (down node))))))))
 
 (m-recur-part2 (g/parse-graph input))
 
