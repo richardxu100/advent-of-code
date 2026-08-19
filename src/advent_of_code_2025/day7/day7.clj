@@ -12,6 +12,15 @@
 (defn beam? [s] (= "|" s))
 (defn splitter? [s] (= "^" s))
 
+(defn dl [[x y]]
+  [(dec x) (inc y)])
+
+(defn dr [[x y]]
+  [(inc x) (inc y)])
+
+(defn d [[x y]]
+  [x (inc y)])
+
 (defn add-beams [board indices]
   (reduce #(assoc-in %1 %2 "|") board (map reverse indices))) ;; okay to explain this, we're passing the board and indices to reduce, which is why we have %1 and %2 here
 
@@ -27,10 +36,11 @@
 
 (first-turn test-graph)
 
-(defn extend-beam-to-next-row [board [x y]]
-  (if (splitter? (g/get-val board [x (inc y)]))
-    (add-beams board [[(dec x) (inc y)] [(inc x) (inc y)]])
-    (add-beams board [[x (inc y)]])))
+(defn extend-beam-to-next-row [board [x y :as coord]]
+  (println coord)
+  (if (splitter? (g/get-val board (d coord)))
+    (add-beams board [(dl coord) (dr coord)])
+    (add-beams board [(d coord)])))
 
 (defn update-next-row [board index]
   (let [current-row (nth board index)
@@ -111,14 +121,6 @@
 (defn terminal-position? [graph [_ y]]
   (= (dec (count graph)) y))
 
-(defn dl [[x y]]
-  [(dec x) y])
-
-(defn dr [[x y]]
-  [(inc x) y])
-
-(defn d [[x y]]
-  [x (inc y)])
 
 (def m-calc-paths
   "Returns the number of paths for a node to the destination"
