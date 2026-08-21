@@ -52,54 +52,80 @@
 
 (defn parse-nodes [route]
   (->> (str/split route #",")
-       (map #(re-seq #"\d+" %))
+       (map #(re-seq #"\d+" %)) 
        (map #(map parse-long %))))
 
 (parse-nodes "[592 479 940],[862 61 35]")
 
-(defn build-graph [n1 n2]
-  {:nodes #{n1 n2} :connections {n1 #{n2} , n2 #{n1}}})
+(defn build-graph [[n1 n2]]
+  (hash-map (str (random-uuid))
+            {:connections {n1 #{n2} , n2 #{n1}}})) ; I may not need the connections keyword, could flatten this
 
-(build-graph '(1 2 3) '(4 5 6))
+(def test-graph
+  (build-graph ['(1 2 3) '(4 5 6)]))
 
-(defn find-containing-graph-id [graphs n]
-   (first (filter #(contains? (:nodes %) n) graphs)))
+(vals test-graph)
 
-(defn find-containing-graph-ids [graphs [n1 n2]]
-   (let [n1-graph-id (find-containing-graph-id graphs n1)
-         n2-graph-id (find-containing-graph-id graphs n2)]
-     (filter seq [n1-graph-id n2-graph-id])))
+;; fix this
+(defn has-node? [graph n]
+  (->> (vals graph)
+       first
+       :connections
+       keys
+       (some #(= n %))
+       boolean
+       ))
+
+(has-node? test-graph [1 2 3])
+
+;; all graphs, in this case is not a collection, but a map, in this case
+(defn find-corresponding-graph [all-graphs n]
+    (->> all-graphs
+         
+       (filter #(has-node? % n))        ;      first
+       first))
+
+; I'm going to use a record class. The models are getting too confusing
+
+(find-corresponding-graph test-graph '(1 2 3))
+
+(defn find-graphs-for-nodes [all-graphs [n1 n2]]
+    (let [n1-graph (find-corresponding-graph all-graphs n1)
+        n2-graph (find-corresponding-graph all-graphs n2)]
+    {n1 n1-graph, n2 n2-graph}))
 
 (defn update-connections [connections [n1 n2]]
   (merge connections {n1 (conj (get connections n1 []) n2)
-                      n2 (conj (get connections n1 []) n1)}))
+                      n2 (conj (get connections n2 []) n1)}))
 
-;; nodes is probably redundant, as that can be derived from the keys of the connections
-(defn add-to-graph [graphs graph-id [n1 n2]]
-  (let [associated-graph (get graphs graph-id)
-        updated-graph {:nodes (conj (:nodes associated-graph) n1 n2)
-                       :connections (update-connections (:connections associated-graph) [n1 n2])}]
-    (update graphs graph-id updated-graph)))
+; kind of works, make sure everything is clojure list
+(update-connections (:connections (first (vals test-graph))) [[3 4 5] [4 5 6]])
 
-(defn merge-graphs [graphs graph-ids [n1 n2]]
-  graphs) ;; not doing anything yet
+(defn add-to-graph [all-graphs graphs-for-nodes]
+  (let [[n1 n2] (keys graphs-for-nodes)]
+    (if (nil? (get graphs-for-nodes n1))
+      (update-in all-graphs [n2 :connections] #(update-connections % [n1 n2]))
+      (update-in all-graphs [n1 :connections] #(update-connections % [n1 n2])))))
 
-(defn update-graphs [graphs graph-ids [n1 n2]]
-  (condp = (count graph-ids)
-    0 (conj graphs (build-graph n1 n2))
-    1 (add-to-graph graphs (first graph-ids) [n1 n2])
-    2 (merge-graphs graphs graph-ids [n1 n2])))
+(defn merge-graphs [all-graphs graphs-for-nodes]
+  ) ;; not doing anything yet
 
-;; I'm going to try to use a clojure list as a map key
-(defn build-graphs [graphs [route _]]
-  (let [[n1 n2] (parse-nodes route)
-        graph-ids (find-containing-graph-ids graphs [n1 n2])]
-    (update-graphs graphs graph-ids [n1 n2])))
+(defn- calc-num-existing-connections [graphs-for-nodes]
+  (count (filter seq (vals graphs-for-nodes))))
+
+(defn update-graphs [all-graphs graphs-for-nodes]
+  (condp = (calc-num-existing-connections graphs-for-nodes)
+    0 (conj all-graphs (build-graph (keys graphs-for-nodes)))
+    1 (add-to-graph all-graphs graphs-for-nodes)
+    2 (merge-graphs all-graphs graphs-for-nodes)))
+
+(defn build-graphs [all-graphs [route _]]
+  (let [nodes (parse-nodes route)
+        graphs-for-nodes (find-graphs-for-nodes all-graphs nodes)]
+    (update-graphs all-graphs graphs-for-nodes)))
 
 (defn connect-circuits [distance-map]
   (let [sorted-distance-map (sort-by val < distance-map)]
     (reduce build-graphs {} sorted-distance-map)))
 
 (connect-circuits (gen-distance-map test-coords))
-
-
