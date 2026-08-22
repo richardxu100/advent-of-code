@@ -13,6 +13,7 @@
 ;; My naive solution will be n^2. I'm going to find the distance between each node first
 
 (def test-input "./src/advent_of_code_2025/day8/test_input.txt")
+(def input "./src/advent_of_code_2025/day8/input.txt")
 
 (defn parse-coords [input]
   (->> (slurp input)
@@ -135,6 +136,7 @@
 (build-merged-circuit (merge test-circuit-1 test-circuit-2) {'(4 5 6) test-circuit-1-id
                                                              '(:d :e :f) test-circuit-2-id})
 
+; not always needed, if in the same circuit... Then can just do nothing
 (defn merge-circuits [circuits circuit-ids-for-nodes]
   (let [merged-circuit (build-merged-circuit circuits circuit-ids-for-nodes)
         [circuit-id1 circuit-id2] (vals circuit-ids-for-nodes)]
@@ -163,20 +165,56 @@
 (defn connect-circuits [sorted-distance-map num-to-connect]
   (reduce build-circuits {} (take num-to-connect sorted-distance-map)))
 
-; The algorithm is probably wrong, as I only have 6 circuits, when there are 11 in the example
-; I didn't implement merge circuits, but that should only reduce circuits
-(connect-circuits (gen-sorted-distance-map test-coords) 10)
+(defn- in-same-circuit? [circuit-ids-for-nodes]
+  (= 1 (count (set (vals circuit-ids-for-nodes)))))
+
+(in-same-circuit? {'(1 2 3) "abc" '(4 5 6) "abcd"})
+
+(defn connect-junction-boxes [sorted-distance-map num-to-connect]
+  (loop [remaining-entries sorted-distance-map
+         remaining-connections num-to-connect
+         circuits {}]
+    (if (zero? remaining-connections)
+      circuits
+      (let [current-entry (first remaining-entries)
+            nodes (parse-nodes (first current-entry))
+            circuit-ids-for-nodes (find-circuit-ids-for-nodes circuits nodes)]
+        (condp = (calc-num-existing-circuits circuit-ids-for-nodes)
+          0 (recur (rest remaining-entries) (dec remaining-connections)
+                   (conj circuits (build-circuit (keys circuit-ids-for-nodes))))
+          1 (recur (rest remaining-entries) (dec remaining-connections)
+                   (add-to-circuit circuits circuit-ids-for-nodes))
+          2 (if (in-same-circuit? circuit-ids-for-nodes)
+              (recur (rest remaining-entries) (dec remaining-connections) circuits) ; i don't think i should dec here
+              (recur (rest remaining-entries) (dec remaining-connections)
+                     (merge-circuits circuits circuit-ids-for-nodes))))))))
+
+(connect-circuits (gen-sorted-distance-map test-coords) 4)
+
+(defn- parse-node-display [[_ {connections :connections}]]
+  (keys connections))
+
+(def test-sorted-distance-map (gen-sorted-distance-map test-coords))
+test-sorted-distance-map
+
+
+(map parse-node-display (connect-junction-boxes test-sorted-distance-map 10))
+
+
+(defn num-nodes-in-circuit [[_ {connections :connections}]]
+  (count (keys connections)))
+
 
 (defn part1 [input]
   (let [coords (parse-coords input)
         sorted-distance-map (gen-sorted-distance-map coords)
-        circuits (connect-circuits sorted-distance-map 10)
-        three-largest-circuits (take 3 (sort-by #(count (keys %)) > circuits))]
-    three-largest-circuits
-;    (reduce * (map #(count (keys %)) three-largest-circuits))
-    ))
+        circuits (connect-junction-boxes sorted-distance-map 1000)
+        three-largest-circuits (take 3 (sort-by num-nodes-in-circuit > circuits))]
+    (print three-largest-circuits)
+    (reduce * (map num-nodes-in-circuit three-largest-circuits))))
 
 (part1 test-input)
+(part1 input)
 
 ;; I still need to finish merge circuits
 
