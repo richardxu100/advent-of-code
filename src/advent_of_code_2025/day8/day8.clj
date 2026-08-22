@@ -28,21 +28,28 @@
 
 (coord-key (first test-coords) (second test-coords))
 
-;; gen routes or something. Anyway. I'm tired right now
+; I can simplify this. I'm just going to add one of the routes, not the reverse, which is the same
 (defn gen-distance-map [coords]
   (apply merge
          (for [c1 coords
                c2 coords
                :when (not= c1 c2)]
-           {(coord-key c1 c2) (distance c1 c2)
-            (coord-key c2 c1) (distance c1 c2)})))
+           {(coord-key c1 c2) (distance c1 c2)})))
+
+(defn gen-sorted-distance-map [coords]
+  (->> (gen-distance-map coords)
+       (sort-by val <)
+       (take-nth 2))) ; last step removes the duplicate routes
+
+(gen-sorted-distance-map test-coords)
 
 (->
  (gen-distance-map test-coords)
  (get (coord-key (first test-coords) (second test-coords))))
 
-(sort-by val < 
-         (gen-distance-map (parse-coords test-input)))
+(take-nth 2 (sort-by val <
+                     (gen-distance-map (parse-coords test-input))))
+
 
 ;; It looks like I'll iterate through the distance map, and connect, and see what graph is created
 
@@ -78,8 +85,7 @@
   (->> circuits
        (filter #(has-node? % n))        ;      first
        first
-       first
-       ))
+       first))
 
 
 ; A map entry looks like a two element array of the key and value
@@ -99,7 +105,7 @@
 ;; => #{(4 5 6) (1 2 3)}
 
 (update-connections (:connections (first (vals test-circuit))) [[3 4 5] [4 5 6]])
-;; => {(1 2 3) #{(4 5 6)}, (4 5 6) #{[3 4 5] (1 2 3)}, [3 4 5] [[4 5 6]]}
+;; => {(1 2 3) #{(4 5 6)}, (4 5 6) #{[3 4 5] (1 2 3)}, [3 4 5] #{[4 5 6]}}
 
 (defn add-to-circuit [circuits circuit-ids-for-nodes]
   (let [[n1 n2] (keys circuit-ids-for-nodes)
@@ -109,9 +115,36 @@
       (update-in circuits [n2-circuit-id :connections] #(update-connections % [n1 n2]))
       (update-in circuits [n1-circuit-id :connections] #(update-connections % [n1 n2])))))
 
-(defn merge-circuits [all-circuits graphs-for-nodes]
-  all-circuits
-  ) ;; not doing anything yet
+(defn- build-merged-circuit [circuits circuit-ids-for-nodes]
+  (let [[n1 n2] (keys circuit-ids-for-nodes)
+        [circuit-id1 circuit-id2] (vals circuit-ids-for-nodes)
+        circuit1 (get circuits circuit-id1)
+        circuit2 (get circuits circuit-id2)
+        merged-connections (merge (:connections circuit1) (:connections circuit2))
+        updated-connections (merge merged-connections {n1 (conj (get merged-connections n1) n2)
+                                                       n2 (conj (get merged-connections n2) n1)})]
+    (hash-map (str (random-uuid))
+              {:connections updated-connections})))
+
+(def test-circuit-1 (build-circuit ['(1 2 3) '(4 5 6)]))
+(def test-circuit-2 (build-circuit ['(:a :b :c) '(:d :e :f)]))
+
+(def test-circuit-1-id (first (keys test-circuit-1)))
+(def test-circuit-2-id (first (keys test-circuit-2)))
+
+(build-merged-circuit (merge test-circuit-1 test-circuit-2) {'(4 5 6) test-circuit-1-id
+                                                             '(:d :e :f) test-circuit-2-id})
+
+(defn merge-circuits [circuits circuit-ids-for-nodes]
+  (let [merged-circuit (build-merged-circuit circuits circuit-ids-for-nodes)
+        [circuit-id1 circuit-id2] (vals circuit-ids-for-nodes)]
+    (-> circuits
+        (dissoc circuit-id1 circuit-id2)
+        (merge merged-circuit)))) 0
+
+(merge-circuits (merge test-circuit-1 test-circuit-2) {'(4 5 6) test-circuit-1-id
+                                                             '(:d :e :f) test-circuit-2-id})
+
 
 (defn- calc-num-existing-circuits [circuit-ids-for-nodes]
   (count (filter seq (vals circuit-ids-for-nodes))))
