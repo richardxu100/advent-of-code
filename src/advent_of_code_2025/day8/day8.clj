@@ -127,12 +127,24 @@
         circuit-ids-for-nodes (find-circuit-ids-for-nodes circuits nodes)]
     (update-graphs circuits circuit-ids-for-nodes)))
 
-(defn connect-circuits [distance-map]
-  (let [sorted-distance-map (sort-by val < distance-map)]
-    (reduce build-circuits {} sorted-distance-map)))
+(defn connect-circuits [sorted-distance-map num-to-connect]
+  (reduce build-circuits {} (take num-to-connect sorted-distance-map)))
 
 ; The algorithm is probably wrong, as I only have 6 circuits, when there are 11 in the example
 ; I didn't implement merge circuits, but that should only reduce circuits
-(connect-circuits (gen-distance-map test-coords))
+(connect-circuits (gen-sorted-distance-map test-coords) 10)
+
+(defn part1 [input]
+  (let [coords (parse-coords input)
+        sorted-distance-map (gen-sorted-distance-map coords)
+        circuits (connect-circuits sorted-distance-map 10)
+        three-largest-circuits (take 3 (sort-by #(count (keys %)) > circuits))]
+    three-largest-circuits
+;    (reduce * (map #(count (keys %)) three-largest-circuits))
+    ))
+
+(part1 test-input)
+
+;; I still need to finish merge circuits
 
 
