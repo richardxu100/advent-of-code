@@ -39,8 +39,7 @@
 
 (->
  (gen-distance-map test-coords)
- (get (coord-key (first test-coords) (second test-coords)))
- )
+ (get (coord-key (first test-coords) (second test-coords))))
 
 (sort-by val < 
          (gen-distance-map (parse-coords test-input)))
@@ -66,7 +65,7 @@
 
 ; (vals test-circuit)
 
-;; fix this
+; val works on a map entry. vals works on the entire map
 (defn has-node? [circuit-entry n]
   (->> (val circuit-entry)
        :connections
@@ -76,7 +75,6 @@
 
 ;; all graphs, in this case is not a collection, but a map, in this case
 (defn find-corresponding-circuit-id [circuits n]
-  #dbg
   (->> circuits
        (filter #(has-node? % n))        ;      first
        first
@@ -94,11 +92,14 @@
     {n1 n1-circuit-id, n2 n2-circuit-id}))
 
 (defn update-connections [connections [n1 n2]]
-  (merge connections {n1 (conj (get connections n1 []) n2)
-                      n2 (conj (get connections n2 []) n1)}))
+  (merge connections {n1 (conj (get connections n1 #{}) n2)
+                      n2 (conj (get connections n2 #{}) n1)}))
 
-; kind of works, make sure everything is clojure list
+(conj #{'(1 2 3)} '(4 5 6))
+;; => #{(4 5 6) (1 2 3)}
+
 (update-connections (:connections (first (vals test-circuit))) [[3 4 5] [4 5 6]])
+;; => {(1 2 3) #{(4 5 6)}, (4 5 6) #{[3 4 5] (1 2 3)}, [3 4 5] [[4 5 6]]}
 
 (defn add-to-circuit [circuits circuit-ids-for-nodes]
   (let [[n1 n2] (keys circuit-ids-for-nodes)
@@ -130,4 +131,8 @@
   (let [sorted-distance-map (sort-by val < distance-map)]
     (reduce build-circuits {} sorted-distance-map)))
 
+; The algorithm is probably wrong, as I only have 6 circuits, when there are 11 in the example
+; I didn't implement merge circuits, but that should only reduce circuits
 (connect-circuits (gen-distance-map test-coords))
+
+
