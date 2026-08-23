@@ -79,18 +79,16 @@
 ; optimization wasn't worth it
 
 (defn build-until-fully-merged [points]
-  (let [circuits (create-circuits points)
-        connections-to-process (->> (sorted-connections points)
-                                    (take-nth 2)
-                                    (map rest))]
-    (loop [circuits' circuits
-           remaining-connections connections-to-process
-           processed-connections []]
-      (if (= 1 (count circuits'))
-        processed-connections
-        (recur (update-circuits circuits' (first remaining-connections))
-               (rest remaining-connections)
-               (conj processed-connections (first remaining-connections)))))))
+  (loop [circuits (create-circuits points) ; can put the definition of variables in the loop. Flattens it a bit
+         connections (->> (sorted-connections points)
+                          (take-nth 2)
+                          (map rest))
+         processed-connections []]
+    (if (= 1 (count circuits))
+      processed-connections
+      (recur (update-circuits circuits (first connections))
+             (rest connections)
+             (conj processed-connections (first connections))))))
 
 (defn- calc-pt2-score [[[x1 _ _] [x2 _ _]]]
   (* x1 x2))
