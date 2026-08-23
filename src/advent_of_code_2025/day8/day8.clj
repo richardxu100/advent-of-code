@@ -3,10 +3,13 @@
     [clojure.string :as str]
     [clojure.set :as set]))
 
+(defn sqrd [x]
+  (Math/pow x 2))
+
 ;; Add a sqrd method
 (defn distance [[x1 y1 z1] [x2 y2 z2]]
   (Math/sqrt
-   (+ (Math/pow (- x1 x2) 2) (Math/pow (- y1 y2) 2) (Math/pow (- z1 z2) 2))))
+   (+ (sqrd (- x1 x2)) (sqrd (- y1 y2)) (sqrd (- z1 z2)))))
 
 (distance [1 2 4] [3 -23 41])
 
@@ -94,11 +97,8 @@
   (merge connections {n1 (conj (get connections n1 #{}) n2)
                       n2 (conj (get connections n2 #{}) n1)}))
 
-(conj #{'(1 2 3)} '(4 5 6))
-;; => #{(4 5 6) (1 2 3)}
-
-(update-connections (:connections (first (vals test-circuit))) [[3 4 5] [4 5 6]])
-;; => {(1 2 3) #{(4 5 6)}, (4 5 6) #{[3 4 5] (1 2 3)}, [3 4 5] #{[4 5 6]}}
+(comment
+  (update-connections (:connections (first (vals test-circuit))) [[3 4 5] [4 5 6]]))
 
 (defn add-to-circuit [circuits circuit-ids-for-nodes]
   (let [[n1 n2] (keys circuit-ids-for-nodes)
@@ -136,20 +136,28 @@
         [circuit-id1 circuit-id2] (vals circuit-ids-for-nodes)]
     (-> circuits
         (dissoc circuit-id1 circuit-id2)
-        (merge merged-circuit)))) 0
+        (merge merged-circuit))))
 
 (merge-circuits (merge test-circuit-1 test-circuit-2) {'(4 5 6) test-circuit-1-id
                                                              '(:d :e :f) test-circuit-2-id})
 
 
 (defn- calc-num-existing-circuits [circuit-ids-for-nodes]
-  (count (filter seq (vals circuit-ids-for-nodes))))
+  (->> circuit-ids-for-nodes
+       vals
+       (filter seq)
+       count))
+
+(defn- in-same-circuit? [circuit-ids-for-nodes]
+  (= 1 (count (set (vals circuit-ids-for-nodes)))))
 
 (defn update-circuits [circuits circuit-ids-for-nodes]
   (condp = (calc-num-existing-circuits circuit-ids-for-nodes)
     0 (conj circuits (build-circuit (keys circuit-ids-for-nodes)))
     1 (add-to-circuit circuits circuit-ids-for-nodes)
-    2 (merge-circuits circuits circuit-ids-for-nodes)))
+    2 (if (in-same-circuit? circuit-ids-for-nodes)
+        circuits
+        (merge-circuits circuits circuit-ids-for-nodes))))
 
 (defn build-circuits [circuits [route _]]
   (let [nodes (parse-nodes route)
@@ -158,9 +166,6 @@
 
 (defn connect-circuits [sorted-distance-map num-to-connect]
   (reduce build-circuits {} (take num-to-connect sorted-distance-map)))
-
-(defn- in-same-circuit? [circuit-ids-for-nodes]
-  (= 1 (count (set (vals circuit-ids-for-nodes)))))
 
 (comment
   (in-same-circuit? {'(1 2 3) "abc" '(4 5 6) "abcd"})
@@ -181,5 +186,6 @@
 
 (part1 test-input 10)
 (part1 input 1000)
+
 
 
