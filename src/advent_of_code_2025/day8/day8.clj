@@ -129,8 +129,6 @@
   (build-merged-circuit (merge test-circuit-1 test-circuit-2) {'(4 5 6) test-circuit-1-id
                                                                '(:d :e :f) test-circuit-2-id}))
 
-; not always needed, if in the same circuit... Then can just do nothing
-; Looks like it doesn't hurt, I should probably remove the connection though here. May hurt for part 2
 (defn merge-circuits [circuits circuit-ids-for-nodes]
   (let [merged-circuit (build-merged-circuit circuits circuit-ids-for-nodes)
         [circuit-id1 circuit-id2] (vals circuit-ids-for-nodes)]
@@ -169,13 +167,12 @@
 
 (comment
   (in-same-circuit? {'(1 2 3) "abc" '(4 5 6) "abcd"})
-  (connect-circuits (gen-sorted-distance-map test-coords) 4)
+  (connect-circuits (gen-sorted-distance-map test-coords) 28)
   (def test-sorted-distance-map (gen-sorted-distance-map test-coords))
   test-sorted-distance-map)
 
 (defn num-nodes-in-circuit [[_ {connections :connections}]]
   (count (keys connections)))
-
 
 (defn part1 [input num-connections]
   (let [coords (parse-coords input)
@@ -187,5 +184,33 @@
 (part1 test-input 10)
 (part1 input 1000)
 
+;; only assuming there's one circuit
+(defn- all-coords-in-circuits? [circuits coords]
+  (let [circuit-connections (:connections (first (vals circuits)))]
+    (= (set coords) (set (keys circuit-connections)))))
 
+(defn- process-last-route [[route _]]
+  (let [[n1 n2] (parse-nodes route)
+        [x1 _ _] n1
+        [x2 _ _] n2]
+    (* x1 x2)))
+
+;; Part 2
+
+;; Criteria. All junction boxes in the circuit. Only one circuit
+(defn part2 [input]
+  (let [coords (parse-coords input)
+        sorted-distance-map (gen-sorted-distance-map coords)]
+    (loop [remaining-routes sorted-distance-map
+           processed-routes []
+           circuits {}]
+      (if (and (= 1 (count (keys circuits)))
+               (all-coords-in-circuits? circuits coords))
+        (process-last-route (last processed-routes))
+        (recur (rest remaining-routes)
+               (conj processed-routes (first remaining-routes))
+               (build-circuits circuits (first remaining-routes)))))))
+
+(part2 test-input)
+(part2 input)
 
