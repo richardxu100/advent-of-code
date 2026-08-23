@@ -59,6 +59,8 @@
                                     (take num-connections))]
     (reduce update-circuits circuits connections-to-process)))
 
+
+
 (defn part1 [input num-connections]
   (let [points (parse-points input)
         final-circuits (build-final-circuits points num-connections)]
@@ -68,10 +70,37 @@
          (take 3)
          (reduce *))))
 
-(part1 test-input 10)
-(part1 input 1000)
+(comment
+  (part1 test-input 10)
+  (part1 input 1000))
 
 ; If calculating distances is already n^2, maybe making the connection
 ; algorithm n^2 isn't that bad too. I was worried about that, but the premature
 ; optimization wasn't worth it
 
+(defn build-until-fully-merged [points]
+  (let [circuits (create-circuits points)
+        connections-to-process (->> (sorted-connections points)
+                                    (take-nth 2)
+                                    (map rest))]
+    (loop [circuits' circuits
+           remaining-connections connections-to-process
+           processed-connections []]
+      (if (= 1 (count circuits'))
+        processed-connections
+        (recur (update-circuits circuits' (first remaining-connections))
+               (rest remaining-connections)
+               (conj processed-connections (first remaining-connections)))))))
+
+(defn- calc-pt2-score [[[x1 _ _] [x2 _ _]]]
+  (* x1 x2))
+
+(defn part2 [input]
+  (let [points (parse-points input)
+        processed-connections (build-until-fully-merged points)]
+    (->> processed-connections
+         last
+         calc-pt2-score)))
+
+(part2 test-input)
+(part2 input)
